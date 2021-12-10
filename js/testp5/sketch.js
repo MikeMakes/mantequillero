@@ -16,7 +16,9 @@ function setup() {
 	centerY=windowHeight/2;
 
 	//socket = io.connect('http://localhost:3000');
-	socket = io.connect();
+	socket = io.connect(window.location.origin);
+	//socket = io.connect(window.location);
+	//socket = io.connect(window.location.origin,{ rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling']});
 }
 
 function draw() {

@@ -6,7 +6,8 @@ const { exec } = require("child_process");
     app.use(express.static('testp5'));
     console.log("server running")
     
-    var socket=require('socket.io');
+    //var socket=require('socket.io');
+    var socket=require('socket.io', { rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] });
     var io=socket(serverp5);
     io.sockets.on('connection', newConnection);
     function newConnection(socket){
