@@ -1,4 +1,5 @@
-const { exec } = require("child_process");
+//const { exec } = require("child_process");
+const { spawn } = require("child_process");
     
     var express=require('express');
     var app=express();
@@ -6,7 +7,8 @@ const { exec } = require("child_process");
     app.use(express.static('testp5'));
     console.log("server running")
     
-    var socket=require('socket.io');
+    //var socket=require('socket.io');
+    var socket=require('socket.io', { rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] });
     var io=socket(serverp5);
     io.sockets.on('connection', newConnection);
     function newConnection(socket){
@@ -17,44 +19,14 @@ const { exec } = require("child_process");
             console.log("Recibido angle: "+angle);
 
             if (angle < 3.14/2){
-	    console.log("------ALANTE");
-            exec("pigs servo 14 1200", (error, stdout, stderr) => {
-                if (error) {
-                    console.log(`error: ${error.message}`);
-                    return;
-                }
-                if (stderr) {
-                    console.log(`stderr: ${stderr}`);
-                    return;
-                }
-                console.log(`stdout: ${stdout}`);
-            });
+	            console.log("+++ ALANTE +++");
+                spawn("pigs", ["servo","14","1200"]);
             } else if((angle > 3.14/2) && (angle < 3.14)){
-                console.log("++++++ATRAS");
-		exec("pigs servo 14 1800", (error, stdout, stderr) => {
-                    if (error) {
-                        console.log(`error: ${error.message}`);
-                        return;
-                    }
-                    if (stderr) {
-                        console.log(`stderr: ${stderr}`);
-                        return;
-                    }
-                    console.log(`stdout: ${stdout}`);
-                });
+                console.log("--- ATRAS ---");
+                spawn("pigs", ["servo","14","1800"]);
             }else if(angle > 3.14){
-		console.log("......parao");
-                exec("pigs servo 14 0", (error, stdout, stderr) => {
-                    if (error) {
-                        console.log(`error: ${error.message}`);
-                        return;
-                    }
-                    if (stderr) {
-                        console.log(`stderr: ${stderr}`);
-                        return;
-                    }
-                    console.log(`stdout: ${stdout}`);
-                });
+		        console.log("... parao ...");
+                spawn("pigs", ["servo","14","0"]);
             }
         }
 
