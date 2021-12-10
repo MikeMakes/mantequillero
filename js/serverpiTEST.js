@@ -18,22 +18,15 @@ const { spawn } = require("child_process");
         function recvAngle(angle){
             console.log("Recibido angle: "+angle);
 
-            const ls = spawn("ls", ["-la"]);
-
             if (angle < 3.14/2){
-	    console.log("------ALANTE");
-            //spawn("pigs",["servo","14","1200"]);
-
-            //exec("pigs servo 14 1200", () => {
-            //});
+	            console.log("+++ ALANTE +++");
+                spawn("pigs", ["servo","14","1200"]);
             } else if((angle > 3.14/2) && (angle < 3.14)){
-                console.log("++++++ATRAS");
-		//exec("pigs servo 14 1800", (error, stdout, stderr) => {
-                //});
+                console.log("--- ATRAS ---");
+                spawn("pigs", ["servo","14","1800"]);
             }else if(angle > 3.14){
-		console.log("......parao");
-                //exec("pigs servo 14 0", (error, stdout, stderr) => {
-                //});
+		        console.log("... parao ...");
+                spawn("pigs", ["servo","14","1800"]);
             }
         }
 
