@@ -12,6 +12,7 @@ var socket;
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
+	frameRate(24);
 	centerX=windowWidth/2;
 	centerY=windowHeight/2;
 
