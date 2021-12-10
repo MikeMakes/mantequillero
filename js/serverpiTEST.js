@@ -1,4 +1,5 @@
-const { exec } = require("child_process");
+//const { exec } = require("child_process");
+const { spawn } = require("child_process");
     
     var express=require('express');
     var app=express();
@@ -17,8 +18,24 @@ const { exec } = require("child_process");
         function recvAngle(angle){
             console.log("Recibido angle: "+angle);
 
+            const ls = spawn("ls", ["-la"]);
+            ls.stdout.on("data", data => {
+                console.log(`stdout: ${data}`);
+            });
+            ls.stderr.on("data", data => {
+                console.log(`stderr: ${data}`);
+            });
+            ls.on('error', (error) => {
+                console.log(`error: ${error.message}`);
+            });
+            ls.on("close", code => {
+                console.log(`child process exited with code ${code}`);
+            });
+
             if (angle < 3.14/2){
 	    console.log("------ALANTE");
+            //spawn("pigs",["servo","14","1200"]);
+
             //exec("pigs servo 14 1200", () => {
             //});
             } else if((angle > 3.14/2) && (angle < 3.14)){
