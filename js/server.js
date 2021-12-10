@@ -1,10 +1,20 @@
+console.log('Starting...');
+
 const { spawn } = require("child_process");
+
+var isPi = require('detect-rpi');
+var pi = false;
+if (isPi()){
+    console.log('RPI');
+    pi = true;
+}
+else console.log('Not RPI');
     
 var express=require('express');
 var app=express();
 var serverp5=app.listen(3000);
 app.use(express.static('testp5'));
-console.log("server running")
+console.log("Server running:")
 
 //var socket=require('socket.io');
 var socket=require('socket.io', { rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] });
@@ -19,13 +29,16 @@ function newConnection(socket){
 
         if (angle < 3.14/2){
             console.log("+++ ALANTE +++");
-            spawn("ls", ["-la"]);
+            if(pi) spawn("pigs", ["servo","14","1200"]);
+            else spawn("ls", ["-la"]);
         } else if((angle > 3.14/2) && (angle < 3.14)){
             console.log("--- ATRAS ---");
-            spawn("ls", ["-la"]);
+            if(pi) spawn("pigs", ["servo","14","1800"]);
+            else spawn("ls", ["-la"]);
         }else if(angle > 3.14){
             console.log("... parao ...");
-            spawn("ls", ["-la"]);
+            if(pi) spawn("pigs", ["servo","14","0"]);
+            else spawn("ls", ["-la"]);
         }
     }
 
