@@ -19,16 +19,16 @@ const { exec } = require("child_process");
 
             if (angle < 3.14/2){
 	    console.log("------ALANTE");
-            exec("pigs servo 14 1200", () => {
-            });
+            //exec("pigs servo 14 1200", () => {
+            //});
             } else if((angle > 3.14/2) && (angle < 3.14)){
                 console.log("++++++ATRAS");
-		exec("pigs servo 14 1800", (error, stdout, stderr) => {
-                });
+		//exec("pigs servo 14 1800", (error, stdout, stderr) => {
+                //});
             }else if(angle > 3.14){
 		console.log("......parao");
-                exec("pigs servo 14 0", (error, stdout, stderr) => {
-                });
+                //exec("pigs servo 14 0", (error, stdout, stderr) => {
+                //});
             }
         }
 
