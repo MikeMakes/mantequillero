@@ -31,18 +31,26 @@ function draw() {
 	line(centerX, 0, centerX, height);
 	line(0,centerY,width,centerY);
 
-	mx=mouseX-centerX;
-	my=mouseY-centerY;
+	mx=centerX-mouseX;
+	my=centerY-mouseY;
+
+	console.log("---------");
+	console.log(mouseX);
+	console.log(centerX);
+	console.log(mx);
+	console.log("---------");
 
 	module=sqrt(pow(mx,2)+pow(my,2));
+	if(my<0) module=-module;
 	angle=atan2(my,mx);
+	angle=Math.PI-angle;
 
-	console.log("mouseX:	"+mouseX);
-	console.log("mouseY:	"+mouseY);
-	console.log("module:	"+module);
-	console.log("angle:	"+angle);
+	//console.log("mouseX:	"+mouseX);
+	//console.log("mouseY:	"+mouseY);
+	//console.log("module:	"+module);
+	//console.log("angle:	"+angle);
 
-	translate(centerX, centerY);
+	//translate(centerX, centerY);
 	//rotate(angle);
 	//triangle(-20,-20,0,70,0,-20);
 	//rect(-20,-20,40,40);
