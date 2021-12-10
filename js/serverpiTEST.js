@@ -26,7 +26,7 @@ const { spawn } = require("child_process");
                 spawn("pigs", ["servo","14","1800"]);
             }else if(angle > 3.14){
 		        console.log("... parao ...");
-                spawn("pigs", ["servo","14","1800"]);
+                spawn("pigs", ["servo","14","0"]);
             }
         }
 
