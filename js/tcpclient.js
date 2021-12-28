@@ -10,6 +10,8 @@ client.connect(PORT, HOST, function() {
  client.write('servo');
  client.write('14');
  client.write('1200');
+
+ client.write('servo 14 1200');
 });
 
 // Add a 'data' event handler for the client socket
@@ -17,7 +19,7 @@ client.connect(PORT, HOST, function() {
 client.on('data', function(data) {
   console.log('DATA: ' + data);
   // Close the client socket completely
-  client.destroy();
+  //client.destroy();
 });
 
 // Add a 'close' event handler for the client socket
