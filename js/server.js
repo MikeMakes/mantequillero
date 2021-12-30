@@ -30,7 +30,6 @@ if (isPi()){
 }
 else console.log('Not RPI');
 
-if(pi){
     console.log('open pipe /dev/pigpio');
     // open in both read & write mode
     // isn't blocked for other process to open the pipe
@@ -43,7 +42,6 @@ if(pi){
     fs.writeSync(fd,stop);
     fs.writeSync(fd,stop);
     console.log('\nStopped.\n\n\n');
-}
   
 var express=require('express');
 var app=express();
