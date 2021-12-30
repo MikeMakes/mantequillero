@@ -8,6 +8,7 @@ let _ang=0.0;
 const WheelSeparation = 100;
 const WheelRadius =0.2;
 
+const SERVO_EN=0;
 const SERVO_LEFT=0;
 const SERVO_RIGHT=1;
 const SERVO_LEFT_PIN=14;
@@ -72,8 +73,8 @@ function newConnection(socket){
         function apply_pwm(SERVO_VEL){
             let pwm_values = SERVO_VEL.map(abs_pwm);
             function abs_pwm(value){
-                let pwm = Math.floor(value);
-                pwm=(SERVO_CW_MAX-SERVO_CCW_MIN)/(2*VEL_LIN_MAX) * pwm +SERVO_MID;
+                let pwm=(SERVO_CW_MAX-SERVO_CCW_MIN)/(2*VEL_LIN_MAX) * value +SERVO_MID;
+                pwm = Math.floor(pwm);
                 if(pwm>SERVO_CW_MAX) return SERVO_CW_MAX;
                 else if(pwm<SERVO_CCW_MIN) return SERVO_CCW_MIN;
                 else 
@@ -85,7 +86,7 @@ function newConnection(socket){
 
             pwm_left ='SERVO ' + SERVO_PINS[SERVO_LEFT] + ' ' + pwm_values[SERVO_LEFT] + '\n';
             pwm_right ='SERVO ' + SERVO_PINS[SERVO_RIGHT] + ' ' + pwm_values[SERVO_RIGHT] + '\n';
-            if(pi){
+            if(pi && SERVO_EN){
                 fs.writeSync(fd,pwm_left);
                 fs.writeSync(fd,pwm_right);
             } else{
