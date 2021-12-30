@@ -12,18 +12,20 @@ if (isPi()){
 }
 else console.log('Not RPI');
 
-console.log('open pipe /dev/pigpio');
-// open in both read & write mode
-// isn't blocked for other process to open the pipe
-const fd = fs.openSync('/dev/pigpio', 'w+');
-const stop = 'servo 14 0\n';
-const foward= 'servo 14 1200\n';
-const reverse='servo 14 1800\n';
-console.log('Stop servo signal: ', stop);
-fs.writeSync(fd, stop);
-fs.writeSync(fd,stop);
-fs.writeSync(fd,stop);
-console.log('\nStopped.\n\n\n');
+if(pi){
+    console.log('open pipe /dev/pigpio');
+    // open in both read & write mode
+    // isn't blocked for other process to open the pipe
+    const fd = fs.openSync('/dev/pigpio', 'w+');
+    const stop = 'servo 14 0\n';
+    const foward= 'servo 14 1200\n';
+    const reverse='servo 14 1800\n';
+    console.log('Stop servo signal: ', stop);
+    fs.writeSync(fd, stop);
+    fs.writeSync(fd,stop);
+    fs.writeSync(fd,stop);
+    console.log('\nStopped.\n\n\n');
+}
     
 var express=require('express');
 var app=express();
@@ -58,7 +60,7 @@ function newConnection(socket){
     }
 
     socket.on('module', recvModule);
-    function recvModule(module){
-        console.log("Recibido module: "+module);
+    function recvModule(mod){
+        console.log("Recibido module: " + mod);
     }
 }
