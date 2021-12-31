@@ -86,7 +86,7 @@ function newConnection(socket){
                 if(pwm>SERVO_CW_MAX) return SERVO_CW_MAX;
                 else if(pwm<SERVO_CCW_MIN) return SERVO_CCW_MIN;
                 else 
-                    if(Math.abs(pwm-SERVO_MID)<SERVO_DEAD_BAND*1.5) return SERVO_MID;
+                    if(Math.abs(pwm-SERVO_MID)<SERVO_DEAD_BAND*1.5) return 0;//SERVO_MID
                     return pwm;
             }
 
