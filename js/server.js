@@ -1,12 +1,15 @@
 console.log('Starting...');
 
-const VEL_LIN_MAX=3500.0;
-const VEL_ANG_MAX=Math.PI;
+const INPUT_LIN_MAX=450;
+const INPUT_ANG_MAX=Math.PI;
+
+const VEL_LIN_MAX=0.33*100;
+const VEL_ANG_MAX=Math.PI*100;
 
 let _lin=0.0;
 let _ang=0.0;
-const WheelSeparation = 100;
-const WheelRadius =0.2;
+const WheelSeparation = 0.06;
+const WheelRadius =0.025/2;
 
 const SERVO_EN=1;
 const SERVO_LEFT=0;
@@ -62,10 +65,15 @@ function newConnection(socket){
         console.log("Received vel_data: " + vel_data);
         _lin=vel_data[0];
         _ang=vel_data[1];
+        if(_lin>INPUT_LIN_MAX || _lin<-INPUT_LIN_MAX) _lin = INPUT_LIN_MAX * _lin/Math.abs(_lin); //limit w sign
+        if(_ang>INPUT_ANG_MAX || _ang<-INPUT_ANG_MAX) _ang = INPUT_ANG_MAX * _ang/Math.abs(_ang);
+        _lin=(2*VEL_LIN_MAX)/(2*INPUT_LIN_MAX) * _lin; //scaling
 
+        console.log("LIN: " + _lin);
+        console.log("ANG: " + _ang);
         function kinetic(_lin,_ang){
-            SERVO_VEL[SERVO_LEFT]=(_lin - WheelSeparation * _ang) /WheelRadius;
-            SERVO_VEL[SERVO_RIGHT]=(_lin + WheelSeparation * _ang) /WheelRadius;
+            SERVO_VEL[SERVO_LEFT]=(_lin/100 - WheelSeparation * _ang/100) /WheelRadius;
+            SERVO_VEL[SERVO_RIGHT]=(_lin/100 + WheelSeparation * _ang/100) /WheelRadius;
             console.log('kinematics: '+SERVO_VEL);
         }
         kinetic(_lin,_ang);

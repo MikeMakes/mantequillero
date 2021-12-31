@@ -32,46 +32,26 @@ function draw() {
 	line(centerX, 0, centerX, height);
 	line(0,centerY,width,centerY);
 
+	fill(255,255,255,100);
+	ellipse(centerX, centerY, windowHeight-100, windowHeight-100);
+	ellipse(centerX, centerY, windowHeight-300, windowHeight-300);
+	ellipse(centerX, centerY, windowHeight-700, windowHeight-700);
 	mx=centerX-mouseX;
 	my=centerY-mouseY;
-
-	console.log("---------");
-	console.log(mouseX);
-	console.log(centerX);
-	console.log(mx);
-	console.log("---------");
 
 	modd=sqrt(pow(mx,2)+pow(my,2));
 	if(my<0) modd=-modd;
 	angle=atan2(my,mx);
 	angle=Math.PI/2-angle;
 
-	//console.log("mouseX:	"+mouseX);
-	//console.log("mouseY:	"+mouseY);
-	//console.log("modd:	"+modd);
-	//console.log("angle:	"+angle);
-
-	//translate(centerX, centerY);
-	//rotate(angle);
-	//triangle(-20,-20,0,70,0,-20);
-	//rect(-20,-20,40,40);
-	//rect(centerX-20,centerY-20,40,40);
-	
-	//if (angle!=last_angle){
-	//	console.log(angle);
-	//	socket.emit('angle',angle);
-	//	last_angle=angle;
-	//}
-	//if (modd!=last_modd){
-	//	console.log(modd);
-	//	socket.emit('modd',modd);
-	//	last_modd=modd;
-	//}
-
 	if(angle!=last_angle || modd!=last_modd){
-		console.log("Enviando vel_data: " + vel_data);
+		//console.log("Enviando vel_data: " + vel_data);
 		vel_data[0]=modd;
 		vel_data[1]=angle;
-		socket.emit('vel_data',vel_data);
+		console.log(modd);
+		console.log(windowHeight-100);
+		if(mouseIsPressed && modd<(windowHeight-100)/2)
+			socket.emit('vel_data',vel_data);
+		
 	}
 }
