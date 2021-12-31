@@ -8,7 +8,7 @@ let _ang=0.0;
 const WheelSeparation = 100;
 const WheelRadius =0.2;
 
-const SERVO_EN=0;
+const SERVO_EN=1;
 const SERVO_LEFT=0;
 const SERVO_RIGHT=1;
 const SERVO_LEFT_PIN=14;
