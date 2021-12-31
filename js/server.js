@@ -77,6 +77,13 @@ function newConnection(socket){
         function kinetic(_lin,_ang){
             SERVO_VEL[SERVO_LEFT]=(_lin/100 - WheelSeparation * _ang/100) /WheelRadius;
             SERVO_VEL[SERVO_RIGHT]=(_lin/100 + WheelSeparation * _ang/100) /WheelRadius;
+
+            //software inversion direction
+            SERVO_VEL.forEach(inverse);
+            function inverse(value,index,array){
+                if(SERVO_INV[index]) array[index] = value * -1;
+            }
+
             console.log('kinematics: '+SERVO_VEL);
         }
         kinetic(_lin,_ang);
@@ -91,12 +98,6 @@ function newConnection(socket){
                 else 
                     if(Math.abs(pwm-SERVO_MID)<SERVO_DEAD_BAND*1.5) return 0;//SERVO_MID
                     return pwm;
-            }
-
-            //software inversion direction
-            pwm_values.forEach(inverse);
-            function inverse(value,index,array){
-                if(SERVO_INV[index]) array[index] = value * -1;
             }
 
             console.log("PWM_VALUES: "+ pwm_values);
