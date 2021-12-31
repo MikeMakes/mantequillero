@@ -35,7 +35,7 @@ function draw() {
 	fill(255,255,255,100);
 	ellipse(centerX, centerY, windowHeight-100, windowHeight-100);
 	ellipse(centerX, centerY, windowHeight-300, windowHeight-300);
-	ellipse(centerX, centerY, windowHeight-700, windowHeight-700);
+	ellipse(centerX, centerY, windowHeight-800, windowHeight-800);
 	mx=centerX-mouseX;
 	my=centerY-mouseY;
 
