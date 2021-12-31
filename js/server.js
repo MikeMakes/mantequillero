@@ -95,7 +95,7 @@ function newConnection(socket){
 
             //software inversion direction
             pwm_values.forEach(inverse);
-            function inverse(){
+            function inverse(value,index,array){
                 if(SERVO_INV[index]) array[index] = value * -1;
             }
 
