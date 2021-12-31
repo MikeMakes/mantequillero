@@ -17,6 +17,7 @@ const SERVO_RIGHT=1;
 const SERVO_LEFT_PIN=14;
 const SERVO_RIGHT_PIN=15;
 const SERVO_PINS=[SERVO_LEFT_PIN, SERVO_RIGHT_PIN];
+const SERVO_INV=[1,0]; //software inversion servo dir
 const SERVO_CCW_MIN=700;
 const SERVO_MID=1500;
 const SERVO_CW_MAX=2300;
@@ -90,6 +91,12 @@ function newConnection(socket){
                 else 
                     if(Math.abs(pwm-SERVO_MID)<SERVO_DEAD_BAND*1.5) return 0;//SERVO_MID
                     return pwm;
+            }
+
+            //software inversion direction
+            pwm_values.forEach(inverse);
+            function inverse(){
+                if(SERVO_INV[index]) array[index] = value * -1;
             }
 
             console.log("PWM_VALUES: "+ pwm_values);
