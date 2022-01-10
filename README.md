@@ -1,6 +1,7 @@
 # mantequillero   
-It tosses you the butter   
-Work in progress of the Rick & Morty butter robot with a Pi zero with some servos, webcam, and a node.js server controlled from a javascript client.
+It tosses you the butter.   
+Work in progress of the Rick & Morty butter robot with a Pi zero with some servos, webcam, and a node.js server controlled from a javascript client.  
+The client looks like this url::https://mikemakes.github.io/mantequillero/  
 
 # Pi Zero W setup   
 - Install pigpio (url::https://github.com/joan2937/pigpio) (read how to start his daemon)
