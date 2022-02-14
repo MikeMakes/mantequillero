@@ -106,6 +106,8 @@ function newConnection(socket){
                 fs.writeSync(fd,pwm_left);
                 fs.writeSync(fd,pwm_right);
                 socket.emit('pwm_data',pwm_values);
+                console.log("EVENT PWM_DATA SEND: "+ pwm_values);
+
 
             } else{
                 console.log("LEFT: "+pwm_left);
