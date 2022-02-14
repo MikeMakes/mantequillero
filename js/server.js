@@ -107,6 +107,8 @@ function newConnection(socket){
             if(pi && SERVO_EN){
                 fs.writeSync(fd,pwm_left);
                 fs.writeSync(fd,pwm_right);
+                socket.emit('pwm',pwm_values);
+
             } else{
                 console.log("LEFT: "+pwm_left);
                 console.log("RIGHT: "+pwm_right);
