@@ -11,7 +11,7 @@ let _ang=0.0;
 const WheelSeparation = 0.06;
 const WheelRadius =0.025/2;
 
-const SERVO_EN=0;
+const SERVO_EN=1;
 const SERVO_LEFT=0;
 const SERVO_RIGHT=1;
 const SERVO_LEFT_PIN=14;
@@ -35,7 +35,6 @@ if (isPi()){
 }
 else console.log('Not RPI');
 
-if(pi){
     console.log('open pipe /dev/pigpio');
     // open in both read & write mode
     // isn't blocked for other process to open the pipe
@@ -48,7 +47,6 @@ if(pi){
     fs.writeSync(fd,stop);
     fs.writeSync(fd,stop);
     console.log('\nStopped.\n\n\n');
-}
   
 var express=require('express');
 var app=express();
