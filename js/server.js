@@ -110,6 +110,7 @@ function newConnection(socket){
             } else{
                 console.log("LEFT: "+pwm_left);
                 console.log("RIGHT: "+pwm_right);
+                socket.emit('pwm',pwm_values);
             }
         }
         apply_pwm(SERVO_VEL);

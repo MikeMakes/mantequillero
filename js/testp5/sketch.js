@@ -52,6 +52,16 @@ function draw() {
 		console.log(windowHeight-100);
 		if(mouseIsPressed && modd<(windowHeight-100)/2)
 			socket.emit('vel_data',vel_data);
-		
 	}
+
+	socket.on('pwm', pwm_visualizer);
+	function pwm_visualizer(pwm){
+		console.log("pwm: \n");
+		console.log(pwm);
+		console.log("\n");
+
+		fill(255,0,0,100);
+		rect(50, centerY, 50, pwm[0]);
+	}
+
 }
