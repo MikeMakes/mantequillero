@@ -66,6 +66,6 @@ function draw() {
 	}
 
 	fill(255,0,0,100);
-	rect(50, centerY, 50, vel_data[0]);
-	rect(100,centerY,50,pwm_data[0]);
+	rect(50, centerY, 50, pwm_data[0]/10);
+	rect(100,centerY,50,pwm_data[1]/10);
 }

@@ -23,6 +23,7 @@ const SERVO_MID=1500;
 const SERVO_CW_MAX=2300;
 const SERVO_DEAD_BAND=90;
 let SERVO_VEL = new Float64Array(2);
+let pwm_datas=[50,50];
 
 const { spawn } = require("child_process");
 const fs = require('fs');
@@ -88,25 +89,27 @@ function newConnection(socket){
 
         function apply_pwm(SERVO_VEL){
             let pwm_values = SERVO_VEL.map(abs_pwm);
-            function abs_pwm(value){
+	    function abs_pwm(value){
                 let pwm=(SERVO_CW_MAX-SERVO_CCW_MIN)/(2*VEL_LIN_MAX) * value +SERVO_MID;
                 pwm = Math.floor(pwm);
                 if(pwm>SERVO_CW_MAX) return SERVO_CW_MAX;
                 else if(pwm<SERVO_CCW_MIN) return SERVO_CCW_MIN;
-                else 
-                    if(Math.abs(pwm-SERVO_MID)<SERVO_DEAD_BAND*1.5) return 0;//SERVO_MID
-                    return pwm;
+                else if(Math.abs(pwm-SERVO_MID)<SERVO_DEAD_BAND*1.5) return 0;//SERVO_MID
+                else return pwm;
             }
 
             console.log("PWM_VALUES: "+ pwm_values);
 
             pwm_left ='SERVO ' + SERVO_PINS[SERVO_LEFT] + ' ' + pwm_values[SERVO_LEFT] + '\n';
             pwm_right ='SERVO ' + SERVO_PINS[SERVO_RIGHT] + ' ' + pwm_values[SERVO_RIGHT] + '\n';
-            if(pi && SERVO_EN){
+            
+	    //pwm_datas=pwm_values;
+
+	    if(pi && SERVO_EN){
                 fs.writeSync(fd,pwm_left);
                 fs.writeSync(fd,pwm_right);
-                socket.emit('pwm_data',pwm_values);
-                console.log("EVENT PWM_DATA SEND: "+ pwm_values);
+               // socket.emit('pwm_data',pwm_datas);
+                //console.log("EVENT PWM_DATA SEND: "+ pwm_datas);
 
 
             } else{
@@ -114,8 +117,12 @@ function newConnection(socket){
                 console.log("RIGHT: "+pwm_right);
                 socket.emit('pwm_data',pwm_values);
             }
+
+	return pwm_values;
         }
-        apply_pwm(SERVO_VEL);
+        pwm_datas=[...apply_pwm(SERVO_VEL)];
+	console.log("EVENT PWM_DATA: " + pwm_datas);
+	socket.emit("pwm_data",pwm_datas);
     }
 
     socket.on('angle', recvAngle);
