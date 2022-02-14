@@ -105,12 +105,12 @@ function newConnection(socket){
             if(pi && SERVO_EN){
                 fs.writeSync(fd,pwm_left);
                 fs.writeSync(fd,pwm_right);
-                socket.emit('pwm',pwm_values);
+                socket.emit('pwm_data',pwm_values);
 
             } else{
                 console.log("LEFT: "+pwm_left);
                 console.log("RIGHT: "+pwm_right);
-                socket.emit('pwm',pwm_values);
+                socket.emit('pwm_data',pwm_values);
             }
         }
         apply_pwm(SERVO_VEL);

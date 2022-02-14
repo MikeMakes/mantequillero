@@ -8,7 +8,7 @@ let last_modd=0.0;
 let angle=0.0;
 let last_angle=0.0;
 let vel_data = new Array(2);
-let pwm_data = [0,0];
+let pwm_data = [100,100];
 
 var socket;
 
@@ -23,13 +23,15 @@ function setup() {
 	//socket = io.connect(window.location);
 	//socket = io.connect(window.location.origin,{ rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling']});
 
-	socket.on('pwm', pwm_visualizer);
-	function pwm_visualizer(pwm){
+	//socket.on('pwm', pwm_visualizer);
+	//function pwm_visualizer(pwm){
+	socket.on("pwm_data", (pwm) => {
 		pwm_data = pwm;
 		console.log("pwm: \n");
 		console.log(pwm);
-		console.log("\n");
-	}
+		console.log("fin pwm");
+	});
+	//}
 }
 
 function draw() {
@@ -64,6 +66,6 @@ function draw() {
 	}
 
 	fill(255,0,0,100);
-	rect(50, centerY, 50, pwm_data[0]);
-
+	rect(50, centerY, 50, vel_data[0]);
+	rect(100,centerY,50,pwm_data[0]);
 }
