@@ -1,16 +1,20 @@
 console.log('Starting...');
 
+//input boundarys
 const INPUT_LIN_MAX=450;
 const INPUT_ANG_MAX=Math.PI;
 
+//vel boundarys
 const VEL_LIN_MAX=0.33*100;
 const VEL_ANG_MAX=Math.PI*100;
 
+//kinematics data
 let _lin=0.0;
 let _ang=0.0;
 const WheelSeparation = 0.06;
 const WheelRadius =0.025/2;
 
+//servo data
 const SERVO_EN=1;
 const SERVO_LEFT=0;
 const SERVO_RIGHT=1;
@@ -23,11 +27,12 @@ const SERVO_MID=1500;
 const SERVO_CW_MAX=2300;
 const SERVO_DEAD_BAND=90;
 let SERVO_VEL = new Float64Array(2);
-let pwm_datas=[50,50];
+let SERVO_PWM=[0,0];
 
-const { spawn } = require("child_process");
-const fs = require('fs');
+//const { spawn } = require("child_process");
+const fs = require('fs'); //for pipes
 
+//detects if running in rpi
 var isPi = require('detect-rpi');
 var pi = false;
 if (isPi()){
@@ -36,33 +41,37 @@ if (isPi()){
 }
 else console.log('Not RPI');
 
+if(pi){
+    //init and stop servos
     console.log('open pipe /dev/pigpio');
     // open in both read & write mode
     // isn't blocked for other process to open the pipe
     const fd = fs.openSync('/dev/pigpio', 'w+');
-    const stop = 'servo 14 0\n';
-    const foward= 'servo 14 1200\n';
-    const reverse='servo 14 1800\n';
-    console.log('Stop servo signal: ', stop);
-    fs.writeSync(fd, stop);
-    fs.writeSync(fd,stop);
-    fs.writeSync(fd,stop);
+    const stop_left ='SERVO ' + SERVO_PINS[SERVO_LEFT] + ' ' + 0 + '\n';
+    const stop_right ='SERVO ' + SERVO_PINS[SERVO_RIGHT] + ' ' + 0 + '\n';
+    console.log('Stop servo signal: ', stop_left, stop_right);
+    fs.writeSync(fd,stop_left);
+    fs.writeSync(fd,stop_right);
     console.log('\nStopped.\n\n\n');
-  
+}
+
+//start client
 var express=require('express');
 var app=express();
 var serverp5=app.listen(3000);
 app.use(express.static('testp5'));
-console.log("Server running:")
+console.log("Client running.\n");
 
+//all server logic as callbacks from client commands events
+console.log("Server running:\n");
 //var socket=require('socket.io');
 var socket=require('socket.io', { rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] });
 var io=socket(serverp5);
+
 io.sockets.on('connection', newConnection);
 function newConnection(socket){
-    console.log('new connection: ' + socket.id);
-
-    socket.on('vel_data', changeVel);
+    console.log('New connection: ' + socket.id);
+    socket.on('vel_data', changeVel);   //change velocity command callback
     function changeVel(vel_data){
         console.log("Received vel_data: " + vel_data);
         _lin=vel_data[0];
@@ -73,75 +82,55 @@ function newConnection(socket){
 
         console.log("LIN: " + _lin);
         console.log("ANG: " + _ang);
-        function kinetic(_lin,_ang){
+        
+        function kinetic(_lin,_ang){ //kinematics (lin,ang)=>(left and right servos' speed)
             SERVO_VEL[SERVO_LEFT]=(_lin/100 - WheelSeparation * _ang/100) /WheelRadius;
             SERVO_VEL[SERVO_RIGHT]=(_lin/100 + WheelSeparation * _ang/100) /WheelRadius;
 
-            //software inversion direction
+            //software direction inversion
             SERVO_VEL.forEach(inverse);
             function inverse(value,index,array){
                 if(SERVO_INV[index]) array[index] = value * -1;
             }
 
-            console.log('kinematics: '+SERVO_VEL);
+            console.log('Servos speed (left,right): '+SERVO_VEL);
         }
         kinetic(_lin,_ang);
 
-        function apply_pwm(SERVO_VEL){
+        function apply_pwm(SERVO_VEL){ //(left,right) speed => (left,right) pwm
             let pwm_values = SERVO_VEL.map(abs_pwm);
-	    function abs_pwm(value){
-                let pwm=(SERVO_CW_MAX-SERVO_CCW_MIN)/(2*VEL_LIN_MAX) * value +SERVO_MID;
+	        function abs_pwm(value){
+                let pwm=(SERVO_CW_MAX-SERVO_CCW_MIN)/(2*VEL_LIN_MAX) * value + SERVO_MID;
                 pwm = Math.floor(pwm);
-                if(pwm>SERVO_CW_MAX) return SERVO_CW_MAX;
-                else if(pwm<SERVO_CCW_MIN) return SERVO_CCW_MIN;
-                else if(Math.abs(pwm-SERVO_MID)<SERVO_DEAD_BAND*1.5) return 0;//SERVO_MID
+                if(pwm>SERVO_CW_MAX) return SERVO_CW_MAX; //max limit
+                else if(pwm<SERVO_CCW_MIN) return SERVO_CCW_MIN; //min limit
+                else if(Math.abs(pwm-SERVO_MID)<SERVO_DEAD_BAND*1.5) return 0; //stop aprox
                 else return pwm;
             }
 
             console.log("PWM_VALUES: "+ pwm_values);
-
             pwm_left ='SERVO ' + SERVO_PINS[SERVO_LEFT] + ' ' + pwm_values[SERVO_LEFT] + '\n';
             pwm_right ='SERVO ' + SERVO_PINS[SERVO_RIGHT] + ' ' + pwm_values[SERVO_RIGHT] + '\n';
-            
-	    //pwm_datas=pwm_values;
-
-	    if(pi && SERVO_EN){
+        
+	        if(pi && SERVO_EN){
                 fs.writeSync(fd,pwm_left);
                 fs.writeSync(fd,pwm_right);
-               // socket.emit('pwm_data',pwm_datas);
-                //console.log("EVENT PWM_DATA SEND: "+ pwm_datas);
-
-
             } else{
-                console.log("LEFT: "+pwm_left);
-                console.log("RIGHT: "+pwm_right);
-                socket.emit('pwm_data',pwm_values);
+                console.log("\n\nDummy pwm write:\n")
+                console.log("\tLEFT: "+pwm_left);
+                console.log("\tRIGHT: "+pwm_right);
             }
 
-	return pwm_values;
+	    return pwm_values;
         }
-        pwm_datas=[...apply_pwm(SERVO_VEL)];
-	console.log("EVENT PWM_DATA: " + pwm_datas);
-	socket.emit("pwm_data",pwm_datas);
+    
+    SERVO_PWM=[...apply_pwm(SERVO_VEL)];
+	socket.emit("pwm_data",SERVO_PWM);
     }
 
     socket.on('angle', recvAngle);
     function recvAngle(angle){
         console.log("Recibido angle: "+angle);
-
-        if (angle < 3.14/2){
-            console.log("+++ ALANTE +++");
-            if(pi) fs.writeSync(fd,foward);
-            else spawn("ls", ["-la"]);
-        } else if((angle > 3.14/2) && (angle < 3.14)){
-            console.log("--- ATRAS ---");
-            if(pi) fs.writeSync(fd,reverse);
-            else spawn("ls", ["-la"]);
-        }else if(angle > 3.14){
-            console.log("... parao ...");
-            if(pi) fs.writeSync(fd,stop);
-            else spawn("ls", ["-la"]);
-        }
     }
 
     socket.on('module', recvModule);
