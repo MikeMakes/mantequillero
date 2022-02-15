@@ -41,12 +41,14 @@ if (isPi()){
 }
 else console.log('Not RPI');
 
+var pipe;
 if(pi){
     //init and stop servos
     console.log('Open pipe /dev/pigpio');
     // open in both read & write mode
     // isn't blocked for other process to open the pipe
     const fd = fs.openSync('/dev/pigpio', 'w+');
+    pipe = fd;
     const stop_left ='SERVO ' + SERVO_PINS[SERVO_LEFT] + ' ' + 0 + '\n';
     const stop_right ='SERVO ' + SERVO_PINS[SERVO_RIGHT] + ' ' + 0 + '\n';
     console.log('Stop servo signal: \n', stop_left, stop_right);
@@ -113,8 +115,8 @@ function newConnection(socket){
             pwm_right ='SERVO ' + SERVO_PINS[SERVO_RIGHT] + ' ' + pwm_values[SERVO_RIGHT] + '\n';
         
 	        if(pi && SERVO_EN){
-                fs.writeSync(fd,pwm_left);
-                fs.writeSync(fd,pwm_right);
+                fs.writeSync(pipe,pwm_left);
+                fs.writeSync(pipe,pwm_right);
             } else{
                 console.log("\n\nDummy pwm write:\n")
                 console.log("\tLEFT: "+pwm_left);
