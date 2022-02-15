@@ -43,16 +43,16 @@ else console.log('Not RPI');
 
 if(pi){
     //init and stop servos
-    console.log('open pipe /dev/pigpio');
+    console.log('Open pipe /dev/pigpio');
     // open in both read & write mode
     // isn't blocked for other process to open the pipe
     const fd = fs.openSync('/dev/pigpio', 'w+');
     const stop_left ='SERVO ' + SERVO_PINS[SERVO_LEFT] + ' ' + 0 + '\n';
     const stop_right ='SERVO ' + SERVO_PINS[SERVO_RIGHT] + ' ' + 0 + '\n';
-    console.log('Stop servo signal: ', stop_left, stop_right);
+    console.log('Stop servo signal: \n', stop_left, stop_right);
     fs.writeSync(fd,stop_left);
     fs.writeSync(fd,stop_right);
-    console.log('\nStopped.\n\n\n');
+    console.log('Stopped.\n');
 }
 
 //start client
