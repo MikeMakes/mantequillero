@@ -65,6 +65,7 @@ function draw() {
 		if(mouseIsPressed && modd<(windowHeight-100)/2)
 			socket.emit('vel_data',vel_data);
 		if(socket.disconnected) pwm_data=[...kinetic(modd,angle)]; //offline fake kinematics
+		console.log(socket.disconnected);
 	}
 
 	//visualize servo pwm values
