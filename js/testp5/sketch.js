@@ -10,7 +10,7 @@ let last_modd=0.0;
 let angle=0.0;
 let last_angle=0.0;
 let vel_data = new Array(2);
-let pwm_data = [100,100];
+let pwm_data = [0,0];
 
 var socket;
 
@@ -69,5 +69,5 @@ function draw() {
 	//visualize servo pwm values
 	fill(0,255,0,100);
 	rect(50, centerY, 50, pwm_data[0]/10);
-	rect(100,centerY,50,pwm_data[1]/10);
+	rect(101,centerY,51,pwm_data[1]/10);
 }
