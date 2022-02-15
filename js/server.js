@@ -61,7 +61,7 @@ if(pi){
 var express=require('express');
 var app=express();
 var serverp5=app.listen(3000);
-app.use(express.static('testp5'));
+app.use(express.static('client'));
 console.log("Client running.\n");
 
 //all server logic as callbacks from client commands events
