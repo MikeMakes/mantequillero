@@ -10,7 +10,7 @@ let last_modd=0.0;
 let angle=0.0;
 let last_angle=0.0;
 let vel_data = new Array(2);
-let pwm_data = [100,100];
+let pwm_data = [0,0];
 
 var socket;
 
@@ -64,10 +64,31 @@ function draw() {
 		vel_data[1]=angle;
 		if(mouseIsPressed && modd<(windowHeight-100)/2)
 			socket.emit('vel_data',vel_data);
+		if(socket.disconnected) pwm_data=[...kinetic(modd,angle)]; //offline fake kinematics
 	}
 
 	//visualize servo pwm values
 	fill(0,255,0,100);
 	rect(50, centerY, 50, pwm_data[0]/10);
-	rect(100,centerY,50,pwm_data[1]/10);
+	rect(101,centerY,51,pwm_data[1]/10);
+}
+
+function kinetic(_lin,_ang){ //kinematics (lin,ang)=>(left and right servos' speed)
+	let SERVO_VEL=[0,0];
+	const WheelSeparation = 0.06;
+	const WheelRadius =0.025/2;
+
+	SERVO_VEL[0]=(_lin/100 - WheelSeparation * _ang/100) /WheelRadius;
+	SERVO_VEL[1]=(_lin/100 + WheelSeparation * _ang/100) /WheelRadius;
+
+	//software direction inversion
+	let SERVO_INV=[1,0];
+	SERVO_VEL.forEach(inverse);
+	function inverse(value,index,array){
+		if(SERVO_INV[index]) array[index] = value * -1;
+	}
+
+	console.log('Servos speed (left,right): '+SERVO_VEL);
+
+	return SERVO_VEL;
 }
