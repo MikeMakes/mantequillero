@@ -11,7 +11,7 @@ const VEL_ANG_MAX=Math.PI*100;
 //kinematics data
 let _lin=0.0;
 let _ang=0.0;
-const WheelSeparation = 0.06;
+const WheelSeparation = 0.06*100;
 const WheelRadius =0.025/2;
 
 //servo data
@@ -21,7 +21,7 @@ const SERVO_RIGHT=1;
 const SERVO_LEFT_PIN=14;
 const SERVO_RIGHT_PIN=15;
 const SERVO_PINS=[SERVO_LEFT_PIN, SERVO_RIGHT_PIN];
-const SERVO_INV=[1,0]; //software inversion servo dir
+const SERVO_INV=[0,0]; //software inversion servo dir
 const SERVO_CCW_MIN=700;
 const SERVO_MID=1500;
 const SERVO_CW_MAX=2300;
@@ -103,7 +103,12 @@ function newConnection(socket){
             let pwm_values = SERVO_VEL.map(abs_pwm);
 	        function abs_pwm(value){
                 let pwm=(SERVO_CW_MAX-SERVO_CCW_MIN)/(2*VEL_LIN_MAX) * value + SERVO_MID;
-                pwm = Math.floor(pwm);
+
+                //if(pwm>0) pwm = Math.floor(pwm); //round to int
+                //else pwm = Math.ceil(pwm);
+                pwm=Math.round(pwm);
+
+                console.log("pwm1  "+pwm);
                 if(pwm>SERVO_CW_MAX) return SERVO_CW_MAX; //max limit
                 else if(pwm<SERVO_CCW_MIN) return SERVO_CCW_MIN; //min limit
                 else if(Math.abs(pwm-SERVO_MID)<SERVO_DEAD_BAND*1.5) return 0; //stop aprox

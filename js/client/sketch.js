@@ -62,15 +62,20 @@ function draw() {
 	if(angle!=last_angle || modd!=last_modd){
 		vel_data[0]=modd;
 		vel_data[1]=angle;
-		if(mouseIsPressed && modd<(windowHeight-100)/2)
+		if(mouseIsPressed && modd<(windowHeight-100)/2){
 			socket.emit('vel_data',vel_data);
-		if(socket.disconnected) pwm_data=[...kinetic(modd,angle)]; //offline fake kinematics
+			if(socket.disconnected) pwm_data=[...kinetic(vel_data[0],vel_data[1])]; //offline fake kinematics
+			textSize(32);
+			fill(255, 0, 0);
+			text(vel_data[0], centerX, centerY);
+			text(vel_data[1], centerX, centerY+50);
+		}
 	}
 
 	//visualize servo pwm values
 	fill(0,255,0,100);
 	rect(50, centerY, 50, pwm_data[0]/10);
-	rect(101,centerY,51,pwm_data[1]/10);
+	rect(101, centerY, 50, pwm_data[1]/10);
 }
 
 function kinetic(_lin,_ang){ //kinematics (lin,ang)=>(left and right servos' speed)
@@ -78,8 +83,14 @@ function kinetic(_lin,_ang){ //kinematics (lin,ang)=>(left and right servos' spe
 	const WheelSeparation = 0.06;
 	const WheelRadius =0.025/2;
 
-	SERVO_VEL[0]=(_lin/100 - WheelSeparation * _ang/100) /WheelRadius;
-	SERVO_VEL[1]=(_lin/100 + WheelSeparation * _ang/100) /WheelRadius;
+	SERVO_VEL[0]=(_lin/100 - (WheelSeparation * _ang/100)) /WheelRadius;
+	SERVO_VEL[1]=(_lin/100 + (WheelSeparation * _ang/100)) /WheelRadius;
+
+	/*
+	fill(0,255,255,100);
+	rect(centerX, centerY, 50, SERVO_VEL[0]/10);
+	rect(centerX, centerY, 50, SERVO_VEL[1]/10);
+	*/
 
 	//software direction inversion
 	let SERVO_INV=[1,0];
