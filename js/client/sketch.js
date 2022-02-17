@@ -27,9 +27,7 @@ function setup() {
 	//function pwm_visualizer(pwm){
 	socket.on("pwm_data", (pwm) => {
 		pwm_data = pwm;
-		console.log("pwm: \n");
-		console.log(pwm);
-		console.log("fin pwm");
+		console.log('pwm_data from server: '+pwm_data);
 	});
 	//}
 }
@@ -52,30 +50,80 @@ function draw() {
 	mx=centerX-mouseX;
 	my=centerY-mouseY;
 
-	//get velocity input
-	modd=sqrt(pow(mx,2)+pow(my,2));
-	if(my<0) modd=-modd;
-	angle=atan2(my,mx);
-	angle=Math.PI/2-angle;
+	//get velocity mouse input
+	if(mouseIsPressed){
+		//console.log("mouseIsPressed");
+		modd=sqrt(pow(mx,2)+pow(my,2));
+		if(my<0) modd=-modd;
+		angle=atan2(my,mx);
+		angle=Math.PI/2-angle;
 
-	//send new velocity command
-	if(angle!=last_angle || modd!=last_modd){
+		//send new velocity command
+		if(modd<(windowHeight-100)/2){
+			vel_data[0]=modd;
+			vel_data[1]=angle;
+
+			if((vel_data[1]!=last_angle) || (vel_data[0]!=last_modd)){
+				socket.emit('vel_data',vel_data);
+				console.log("Emit vel_data: "+ vel_data);
+				if(socket.disconnected) pwm_data=[...kinetic(vel_data[0],vel_data[1])]; //offline fake kinematics
+				textSize(32);
+				fill(255, 0, 0);
+				text(vel_data[0], centerX, centerY);
+				text(vel_data[1], centerX, centerY+50);
+			}
+		}
+	}
+
+	if(socket.disconnected){
+		//visualize dummy kinematics
+		fill(255,0,0,100);
+		rect(50, centerY, 50, pwm_data[0]/10);
+		rect(101, centerY, 50, pwm_data[1]/10);	
+	} else{
+		//visualize servo pwm values
+		fill(0,255,0,100);
+		rect(50, centerY, 50, pwm_data[0]/10);
+		rect(101, centerY, 50, pwm_data[1]/10);
+	}
+}
+
+function keyPressed() {
+	let sendmsg = true;
+	if (keyCode === LEFT_ARROW)
+		if(angle>=-Math.PI+0.1) angle=angle-0.1;		
+	else if (keyCode == 39){//RIGHT_ARROW){
+		if(angle<=Math.PI-0.1){
+			angle=angle+0.1;
+		}
+			console.log(Math.PI-0.1);
+			console.log(">=");
+			console.log(angle);
+	}
+	else if (keyCode === DOWN_ARROW)
+		if(modd>=-999) modd=modd-1;
+	else if (keyCode === up_ARROW)
+		if(modd<=999) modd=modd+1;
+	else
+		sendmsg=false;
+
+	console.log("keypressed"+keyCode);
+
+	if (sendmsg){
+		console.log("key send");
 		vel_data[0]=modd;
 		vel_data[1]=angle;
-		if(mouseIsPressed && modd<(windowHeight-100)/2){
+
+		if((vel_data[1]!=last_angle) || (vel_data[0]!=last_modd)){
 			socket.emit('vel_data',vel_data);
+			console.log("Emit vel_data: "+ vel_data);
 			if(socket.disconnected) pwm_data=[...kinetic(vel_data[0],vel_data[1])]; //offline fake kinematics
 			textSize(32);
-			fill(255, 0, 0);
+			fill(0, 255, 0);
 			text(vel_data[0], centerX, centerY);
 			text(vel_data[1], centerX, centerY+50);
 		}
 	}
-
-	//visualize servo pwm values
-	fill(0,255,0,100);
-	rect(50, centerY, 50, pwm_data[0]/10);
-	rect(101, centerY, 50, pwm_data[1]/10);
 }
 
 function kinetic(_lin,_ang){ //kinematics (lin,ang)=>(left and right servos' speed)
@@ -99,7 +147,7 @@ function kinetic(_lin,_ang){ //kinematics (lin,ang)=>(left and right servos' spe
 		if(SERVO_INV[index]) array[index] = value * -1;
 	}
 
-	console.log('Servos speed (left,right): '+SERVO_VEL);
+	console.log('[Dummy kin] Servos speed (left,right): '+SERVO_VEL);
 
 	return SERVO_VEL;
 }
