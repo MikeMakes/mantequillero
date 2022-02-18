@@ -6,9 +6,9 @@ let my=0;
 
 //velocity input and command data
 let modd=0.0;
-let last_modd=0.0;
+let moddLast=0.0;
 let angle=0.0;
-let last_angle=0.0;
+let angleLast=0.0;
 let vel_data = new Array(2);
 let pwm_data = [0,0];
 
@@ -60,31 +60,47 @@ function draw() {
 		if(angle>=Math.PI) angle=-Math.PI+(angle-Math.PI); //[pi,3pi/2]=>[-pi/2,-pi] -Math.PI+(angle-Math.PI)
 
 		//send new velocity command
-		if(modd<(windowHeight-100)/2){
-			send_vel();
-		}
+		//if(modd<(windowHeight-100)/2){
+		//	send_vel();
+		//}
 	}
 
+	//keyboard velocity input, hold increase, release stops 
+	let reduce_lin = true;
+	let reduce_ang = true;
 	if (keyIsDown(65)) {
 		angle -= 0.2;
 		if(angle<=-Math.PI) angle=-Math.PI; 
+		reduce_ang=false;
 	}
-	
 	if (keyIsDown(68)) {
 		angle += 0.2;
 		if(angle>=Math.PI) angle=Math.PI;
+		reduce_ang=false;
 	}
-	
 	if (keyIsDown(83)) {
 		modd -= 20;
 		if(modd<-500) modd=-500;
+		reduce_lin=false;
 	}
-	
 	if (keyIsDown(87)) {
 		modd += 20;
 		if(modd>500) modd=500;
+		reduce_lin=false;
 	}
 
+	function reduce(){ //automatic speed decrease
+		if(reduce_lin===true){
+			modd=modd*0.4;
+		}
+		if(reduce_ang===true){
+			angle=angle*0.4;
+		}
+	}
+	reduce()
+
+	if((modd>-10)&&(modd<10)) modd=0;
+/*
 	if(keyIsPressed===true){
 		console.log("keypressed");
 		send_vel();
@@ -106,6 +122,10 @@ function draw() {
 		}
 		if(sendmsg===true) send_vel();
 	}
+*/
+	if(moddLast!=modd || angleLast!=angle) send_vel();
+	moddLast=modd;
+	angleLast=angle;
 
 	if(socket.disconnected){
 		//visualize dummy kinematics
