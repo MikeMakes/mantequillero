@@ -87,6 +87,23 @@ function draw() {
 	if(keyIsPressed===true){
 		console.log("keypressed");
 		send_vel();
+	} else{ //automatic stop none key hold
+		let sendmsg = false;
+		modd=modd*0.9;
+		if((modd>-10)&&(modd<10)) {
+			if(modd!=0) sendmsg=true;
+			modd=0;
+		} else{
+			sendmsg=true;
+		}
+		angle=angle*0.9;
+		if((angle>-0.1)&&(angle<0.1)) {
+			if(angle!=0) sendmsg=true;
+			angle=0;
+		} else{
+			sendmsg=true;
+		}
+		if(sendmsg===true) send_vel();
 	}
 
 	if(socket.disconnected){
