@@ -11,7 +11,9 @@ const VEL_ANG_MAX=Math.PI*100;
 //kinematics data
 let _lin=0.0;
 let _ang=0.0;
-const WheelSeparation = 0.06*100;
+let _linLast=0.0;
+let _angLast=0.0;
+const WheelSeparation = 0.06;
 const WheelRadius =0.025/2;
 
 //servo data
@@ -76,6 +78,8 @@ function newConnection(socket){
     socket.on('vel_data', changeVel);   //change velocity command callback
     function changeVel(vel_data){
         console.log("Received vel_data: " + vel_data);
+        _linLast=_lin;
+        _angLast=_ang;
         _lin=vel_data[0];
         _ang=vel_data[1];
         if(_lin>INPUT_LIN_MAX || _lin<-INPUT_LIN_MAX) _lin = INPUT_LIN_MAX * _lin/Math.abs(_lin); //limit w sign
@@ -86,8 +90,8 @@ function newConnection(socket){
         console.log("ANG: " + _ang);
         
         function kinetic(_lin,_ang){ //kinematics (lin,ang)=>(left and right servos' speed)
-            SERVO_VEL[SERVO_LEFT]=(_lin/100 - WheelSeparation * _ang/100) /WheelRadius;
-            SERVO_VEL[SERVO_RIGHT]=(_lin/100 + WheelSeparation * _ang/100) /WheelRadius;
+            SERVO_VEL[SERVO_LEFT]=(_lin/100 - WheelSeparation * _ang) /WheelRadius;
+            SERVO_VEL[SERVO_RIGHT]=(_lin/100 + WheelSeparation * _ang) /WheelRadius;
 
             //software direction inversion
             SERVO_VEL.forEach(inverse);
@@ -111,7 +115,7 @@ function newConnection(socket){
                 console.log("pwm1  "+pwm);
                 if(pwm>SERVO_CW_MAX) return SERVO_CW_MAX; //max limit
                 else if(pwm<SERVO_CCW_MIN) return SERVO_CCW_MIN; //min limit
-                else if(Math.abs(pwm-SERVO_MID)<SERVO_DEAD_BAND*1.5) return 0; //stop aprox
+                else if(Math.abs(pwm-SERVO_MID)<SERVO_DEAD_BAND*1) return 0; //stop aprox
                 else return pwm;
             }
 

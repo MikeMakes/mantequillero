@@ -57,6 +57,7 @@ function draw() {
 		if(my<0) modd=-modd;
 		angle=atan2(my,mx);
 		angle=Math.PI/2-angle;
+		if(angle>=Math.PI) angle=-Math.PI+(angle-Math.PI); //[pi,3pi/2]=>[-pi/2,-pi] -Math.PI+(angle-Math.PI)
 
 		//send new velocity command
 		if(modd<(windowHeight-100)/2){
@@ -108,15 +109,18 @@ function draw() {
 
 	if(socket.disconnected){
 		//visualize dummy kinematics
-		fill(255,0,0,100);
-		rect(50, centerY, 50, pwm_data[0]/10);
-		rect(101, centerY, 50, pwm_data[1]/10);	
+		fill(255,0,0,100);	
 	} else{
 		//visualize servo pwm values
 		fill(0,255,0,100);
-		rect(50, centerY, 50, pwm_data[0]/10);
-		rect(101, centerY, 50, pwm_data[1]/10);
 	}
+	let pwm_data_norm = pwm_data.map(pwm_norm);
+	function pwm_norm(value){
+		if (value===0) return value;
+		return value-1500;
+	}
+	rect(50, centerY, 50, pwm_data_norm[0]/10);
+	rect(101, centerY, 50, pwm_data_norm[1]/10);
 }
 
 function send_vel(){
@@ -199,8 +203,8 @@ function kinetic(_lin,_ang){ //kinematics (lin,ang)=>(left and right servos' spe
 	const WheelSeparation = 0.06;
 	const WheelRadius =0.025/2;
 
-	SERVO_VEL[0]=(_lin/100 - (WheelSeparation * _ang/100)) /WheelRadius;
-	SERVO_VEL[1]=(_lin/100 + (WheelSeparation * _ang/100)) /WheelRadius;
+	SERVO_VEL[0]=(_lin/100 - (WheelSeparation * _ang)) /WheelRadius;
+	SERVO_VEL[1]=(_lin/100 + (WheelSeparation * _ang)) /WheelRadius;
 
 	/*
 	fill(0,255,255,100);
