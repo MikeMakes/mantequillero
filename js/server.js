@@ -13,7 +13,7 @@ let _lin=0.0;
 let _ang=0.0;
 let _linLast=0.0;
 let _angLast=0.0;
-const WheelSeparation = 0.06*1.5;
+const WheelSeparation = 0.06*1.6;
 const WheelRadius =0.025/2;
 
 //servo data
