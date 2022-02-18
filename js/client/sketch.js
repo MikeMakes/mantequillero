@@ -60,19 +60,33 @@ function draw() {
 
 		//send new velocity command
 		if(modd<(windowHeight-100)/2){
-			vel_data[0]=modd;
-			vel_data[1]=angle;
-
-			if((vel_data[1]!=last_angle) || (vel_data[0]!=last_modd)){
-				socket.emit('vel_data',vel_data);
-				console.log("Emit vel_data: "+ vel_data);
-				if(socket.disconnected) pwm_data=[...kinetic(vel_data[0],vel_data[1])]; //offline fake kinematics
-				textSize(32);
-				fill(255, 0, 0);
-				text(vel_data[0], centerX, centerY);
-				text(vel_data[1], centerX, centerY+50);
-			}
+			send_vel();
 		}
+	}
+
+	if (keyIsDown(65)) {
+		angle -= 0.1;
+		if(angle<=-Math.PI) angle=-Math.PI; 
+	}
+	
+	if (keyIsDown(68)) {
+		angle += 0.1;
+		if(angle>=Math.PI) angle=Math.PI;
+	}
+	
+	if (keyIsDown(83)) {
+		modd -= 5;
+		if(modd<-500) modd=-500;
+	}
+	
+	if (keyIsDown(87)) {
+		modd += 5;
+		if(modd>500) modd=500;
+	}
+
+	if(keyIsPressed===true){
+		console.log("keypressed");
+		send_vel();
 	}
 
 	if(socket.disconnected){
@@ -88,43 +102,80 @@ function draw() {
 	}
 }
 
-function keyPressed() {
+function send_vel(){
+	vel_data[0]=modd;
+	vel_data[1]=angle;
+
+	socket.emit('vel_data',vel_data);
+	console.log("Emit vel_data: "+ vel_data);
+	if(socket.disconnected) pwm_data=[...kinetic(vel_data[0],vel_data[1])]; //offline fake kinematics
+	textSize(32);
+	fill(0, 255, 0);
+	text(vel_data[0], centerX, centerY);
+	text(vel_data[1], centerX, centerY+50);
+}
+
+function keyPressed(){
+	console.log("keycode "+keyCode);
+
+}
+
+/*
+function keyTyped() {
 	let sendmsg = true;
-	if (keyCode === LEFT_ARROW)
-		if(angle>=-Math.PI+0.1) angle=angle-0.1;		
-	else if (keyCode == 39){//RIGHT_ARROW){
-		if(angle<=Math.PI-0.1){
-			angle=angle+0.1;
-		}
-			console.log(Math.PI-0.1);
-			console.log(">=");
-			console.log(angle);
-	}
-	else if (keyCode === DOWN_ARROW)
+	if (keyCode === 'a'){//left
+		//if(angle>=-Math.PI+0.1)
+		angle=angle-0.1;		
+	} else if (keyCode === 'd'){//RIGHT_ARROW){
+		if(angle<=Math.PI-0.1) angle=angle+0.1;
+	} else if (keyCode === 's'){//down
 		if(modd>=-999) modd=modd-1;
-	else if (keyCode === up_ARROW)
+	} else if (keyCode === 'w'){//up
 		if(modd<=999) modd=modd+1;
-	else
+	} else{
+		console.log("!msg");
 		sendmsg=false;
+	}
 
 	console.log("keypressed"+keyCode);
 
 	if (sendmsg){
 		console.log("key send");
-		vel_data[0]=modd;
-		vel_data[1]=angle;
-
-		if((vel_data[1]!=last_angle) || (vel_data[0]!=last_modd)){
-			socket.emit('vel_data',vel_data);
-			console.log("Emit vel_data: "+ vel_data);
-			if(socket.disconnected) pwm_data=[...kinetic(vel_data[0],vel_data[1])]; //offline fake kinematics
-			textSize(32);
-			fill(0, 255, 0);
-			text(vel_data[0], centerX, centerY);
-			text(vel_data[1], centerX, centerY+50);
-		}
+		send_vel();
 	}
 }
+*/
+/*
+let k=false;
+function keyPressed() {
+	k=true;
+	let sendmsg = true;
+	if (keyCode === 65){//left
+		//if(angle>=-Math.PI+0.1)
+		angle=angle-0.1;		
+	} else if (keyCode === 68){//RIGHT_ARROW){
+		if(angle<=Math.PI-0.1) angle=angle+0.1;
+	} else if (keyCode === 83){//down
+		if(modd>=-999) modd=modd-1;
+	} else if (keyCode === 87){//up
+		if(modd<=999) modd=modd+1;
+	} else{
+		console.log("!msg");
+		sendmsg=false;
+	}
+
+	console.log("keypressed"+keyCode);
+
+	if (sendmsg){
+		console.log("key send");
+		send_vel();
+	}
+}
+
+function keyReleased(){
+	k=false;
+}
+*/
 
 function kinetic(_lin,_ang){ //kinematics (lin,ang)=>(left and right servos' speed)
 	let SERVO_VEL=[0,0];
