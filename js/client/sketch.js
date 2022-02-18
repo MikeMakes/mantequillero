@@ -66,22 +66,22 @@ function draw() {
 	}
 
 	if (keyIsDown(65)) {
-		angle -= 0.1;
+		angle -= 0.2;
 		if(angle<=-Math.PI) angle=-Math.PI; 
 	}
 	
 	if (keyIsDown(68)) {
-		angle += 0.1;
+		angle += 0.2;
 		if(angle>=Math.PI) angle=Math.PI;
 	}
 	
 	if (keyIsDown(83)) {
-		modd -= 5;
+		modd -= 20;
 		if(modd<-500) modd=-500;
 	}
 	
 	if (keyIsDown(87)) {
-		modd += 5;
+		modd += 20;
 		if(modd>500) modd=500;
 	}
 
@@ -90,14 +90,14 @@ function draw() {
 		send_vel();
 	} else{ //automatic stop none key hold
 		let sendmsg = false;
-		modd=modd*0.9;
+		modd=modd*0.4;
 		if((modd>-10)&&(modd<10)) {
 			if(modd!=0) sendmsg=true;
 			modd=0;
 		} else{
 			sendmsg=true;
 		}
-		angle=angle*0.9;
+		angle=angle*0.4;
 		if((angle>-0.1)&&(angle<0.1)) {
 			if(angle!=0) sendmsg=true;
 			angle=0;
