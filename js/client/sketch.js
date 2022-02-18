@@ -50,6 +50,9 @@ function draw() {
 	mx=centerX-mouseX;
 	my=centerY-mouseY;
 
+	let reduce_lin = true;
+	let reduce_ang = true;
+
 	//get velocity mouse input
 	if(mouseIsPressed){
 		//console.log("mouseIsPressed");
@@ -59,6 +62,8 @@ function draw() {
 		angle=Math.PI/2-angle;
 		if(angle>=Math.PI) angle=-Math.PI+(angle-Math.PI); //[pi,3pi/2]=>[-pi/2,-pi] -Math.PI+(angle-Math.PI)
 
+		reduce_lin=false;
+		reduce_ang=false;
 		//send new velocity command
 		//if(modd<(windowHeight-100)/2){
 		//	send_vel();
@@ -66,8 +71,6 @@ function draw() {
 	}
 
 	//keyboard velocity input, hold increase, release stops 
-	let reduce_lin = true;
-	let reduce_ang = true;
 	if (keyIsDown(65)) {
 		angle -= 0.2;
 		if(angle<=-Math.PI) angle=-Math.PI; 
