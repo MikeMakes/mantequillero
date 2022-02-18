@@ -120,7 +120,7 @@ function draw() {
 		return value-1500;
 	}
 	rect(50, centerY, 50, pwm_data_norm[0]/10);
-	rect(101, centerY, 50, -pwm_data_norm[1]/10);
+	rect(101, centerY, 50, pwm_data_norm[1]/10);
 }
 
 function send_vel(){
