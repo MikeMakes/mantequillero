@@ -89,18 +89,12 @@ function draw() {
 		reduce_lin=false;
 	}
 
-	function reduce(){ //automatic speed decrease
-		if(reduce_lin===true){
-			modd=modd*0.4;
-		}
-		if(reduce_ang===true){
-			angle=angle*0.4;
-		}
-	}
-	reduce()
-
+	//automatic speed decrease
+	if(reduce_lin===true) modd=modd*0.4;
+	if(reduce_ang===true) angle=angle*0.4;
 	if((modd>-10)&&(modd<10)) modd=0;
-/*
+	if((angle>-0.1)&&(angle<0.1)) angle=0;
+	/*
 	if(keyIsPressed===true){
 		console.log("keypressed");
 		send_vel();
