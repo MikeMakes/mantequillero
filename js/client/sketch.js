@@ -97,40 +97,17 @@ function draw() {
 	if(reduce_ang===true) angle=angle*0.4;
 	if((modd>-10)&&(modd<10)) modd=0;
 	if((angle>-0.1)&&(angle<0.1)) angle=0;
-	/*
-	if(keyIsPressed===true){
-		console.log("keypressed");
-		send_vel();
-	} else{ //automatic stop none key hold
-		let sendmsg = false;
-		modd=modd*0.4;
-		if((modd>-10)&&(modd<10)) {
-			if(modd!=0) sendmsg=true;
-			modd=0;
-		} else{
-			sendmsg=true;
-		}
-		angle=angle*0.4;
-		if((angle>-0.1)&&(angle<0.1)) {
-			if(angle!=0) sendmsg=true;
-			angle=0;
-		} else{
-			sendmsg=true;
-		}
-		if(sendmsg===true) send_vel();
-	}
-*/
+
 	if(moddLast!=modd || angleLast!=angle) send_vel();
 	moddLast=modd;
 	angleLast=angle;
 
 	if(socket.disconnected){
-		//visualize dummy kinematics
-		fill(255,0,0,100);	
+		fill(255,0,0,100);	//red dummy kinematics
 	} else{
-		//visualize servo pwm values
-		fill(0,255,0,100);
+		fill(0,255,0,100); //green servo pwm values
 	}
+
 	let pwm_data_norm = pwm_data.map(pwm_norm);
 	function pwm_norm(value){
 		if (value===0) return value;
