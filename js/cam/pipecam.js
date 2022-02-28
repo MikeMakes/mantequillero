@@ -21,13 +21,17 @@ while(framecounter<100){
     console.log("searching start of jpeg");
     //Slice by knowing all jpeg start with 0xFF 0xD8 bytes
     let jpegstart = data.findIndex((element,index,array) => { 
-    //if(element===0xFF) console.log("0xFF at index:  " + index);
-    //if(array[index+1]===0xD8) console.log("0xD8 at index:  " + index+1);
-    if((element===0xFF)&&(array[index+1]===0xD8)){
-        //console.log("Start of frame at: " + index);
-        return true;
-    }  
+        //if(element===0xFF) console.log("0xFF at index:  " + index);
+        //if(array[index+1]===0xD8) console.log("0xD8 at index:  " + index+1);
+        if((element===0xFF)&&(array[index+1]===0xD8)){
+            //console.log("Start of frame at: " + index);
+            return true;
+        }  
     });
+
+    console.log("");
+    console.log(data);
+    console.log("");
 
     //Save frame
     if((jpegstart>=0)&&out.length>0){
