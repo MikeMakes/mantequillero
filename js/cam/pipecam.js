@@ -12,10 +12,15 @@ let data=new Uint8Array();
 let out=new Uint8Array();
 let framecounter=0;
 let c=0;
+
 while(framecounter<100){
 
     console.log("reading pipe");
-    fs.readSync(pipe,data);
+    //fs.readSync(pipe,data);
+    fs.read(pipe,data,0,10,-1,function(err,bytesRead,buffer){
+        console.log("buffer");
+        data=buffer;
+    });
 
 
     console.log("searching start of jpeg");
@@ -55,3 +60,18 @@ while(framecounter<100){
     //if(frameCounter===100) client.destroy();
     c++;
 }
+
+/*
+process.stdin.resume();
+
+var lingeringLine = "";
+
+process.stdin.on('data', function(chunk) {
+    console.log(chunk);
+});
+
+process.stdin.on('end', function() {
+    console.log(chunk);
+    console.log("end");
+});
+*/
