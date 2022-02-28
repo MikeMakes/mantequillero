@@ -14,9 +14,11 @@ let framecounter=0;
 let c=0;
 while(framecounter<100){
 
+    console.log("reading pipe");
     fs.readSync(pipe,data);
 
 
+    console.log("searching start of jpeg");
     //Slice by knowing all jpeg start with 0xFF 0xD8 bytes
     let jpegstart = data.findIndex((element,index,array) => { 
     //if(element===0xFF) console.log("0xFF at index:  " + index);
