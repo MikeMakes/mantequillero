@@ -3,8 +3,15 @@ let frameCounter=0;
 let c=0;
 let out = new Uint8Array(); // new in ES2017
 
-var net = require('net');
+var http = require('http');
+const httpserver = http.createServer(function(req, res) {
+  console.log('Server running at http://localhost:8124/');
+  res.writeHead(200, {'Content-Type': 'image/jpeg'})
+  res.end(out) // Send the file data to the browser.
+}).listen(8124)
 
+
+var net = require('net');
 var HOST = '192.168.18.114';
 var PORT = 3001;
 
@@ -34,18 +41,21 @@ client.on('data', function(data) {
     console.log("New Frame");
     frameCounter++;
 
-    fs.writeFile("frame_"+frameCounter+".jpeg", out, 'base64', function (err) {
+  
+    //fs.writeFile("frame_"+frameCounter+".jpeg", out, 'base64', function (err) {
+    fs.writeFile("frame.jpeg", out, 'base64', function (err) {
       if (err) return console.log(err);
-      else console.log("writed final_"+frameCounter+".jpeg");
+      else console.log("writed frame_"+frameCounter+".jpeg");
     });//, [encoding], [callback])
-
+    
+    
     out =new Uint8Array();
   }
 
   out = Buffer.concat([out,data]);
 
   // Close the client socket completely
-  if(frameCounter===100) client.destroy();
+  //if(frameCounter===100) client.destroy();
   c++;
 
   //console.log(out.length);
