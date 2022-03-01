@@ -30,6 +30,10 @@ function setup() {
 		console.log('pwm_data from server: '+pwm_data);
 	});
 	//}
+
+	socket.on("img_data", (imgbuffer) => {
+		console.log("imgbuffer: " + imgbuffer);
+	});
 }
 
 function draw() {

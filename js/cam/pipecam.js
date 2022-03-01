@@ -1,32 +1,28 @@
 
 const fs = require('fs'); //for pipes
-
 //init and stop servos
 console.log('Open pipe /pipetest');
-// open in both read & write mode
+// open in both read mode
 // isn't blocked for other process to open the pipe
 const fd = fs.openSync('pipetest', 'r+');
 pipe = fd;
 
-let data=new Uint8Array(640*480);
+let data=new Uint8Array(12000);
 let out=new Uint8Array();
 let frameCounter=0;
-let c=0;
+let i=0;
 let br=0;
+let newFrame=false;
 
 while(frameCounter<100){
 
-    console.log("reading pipe");
     //fs.readSync(pipe,data);
     fs.read(pipe,data,0,11700,-1,function(err,bytesRead){
-    //    console.log("buffer");
-    //    data=buffer;
-	br=bytesRead;
-	console.log("bytesRead: "+br);
+        br=bytesRead;
+        newFrame=true;
     });
-    console.log(data);
 
-    console.log("searching start of jpeg");
+    /*
     //Slice by knowing all jpeg start with 0xFF 0xD8 bytes
     let jpegstart = data.findIndex((element,index,array) => { 
         //if(element===0xFF) console.log("0xFF at index:  " + index);
@@ -36,21 +32,14 @@ while(frameCounter<100){
             return true;
         }  
     });
+    */
 
-    console.log("");
-    console.log(data);
-    console.log("");
-
-    if(data.length>0){
-    console.log("br: "+br);
-    let d=data.slice(0,11700);
-    console.log(d);
-    fs.writeFile("d.jpeg",d,'utf-8',function(err){
-	if(err) console.log(err);
-	else console.log("writed d.jpeg");
-    });
-
-    frameCounter=111;
+    if(newFrame && data.length>0){
+        let d=data.slice(0,11700);
+        fs.writeFile("d.jpeg",d,'utf-8',function(err){
+            if(err) console.log(err);
+            else console.log("writed d.jpeg");
+        });
     }
 
     //Save frame
@@ -58,13 +47,11 @@ while(frameCounter<100){
         console.log("New Frame");
         frameCounter++;
 
-
         //fs.writeFile("frame_"+frameCounter+".jpeg", out, 'base64', function (err) {
         fs.writeFile("frame"+frameCounter+".jpeg", out, 'base64', function (err) {
             if (err) return console.log(err);
             else console.log("writed frame_"+frameCounter+".jpeg");
         });//, [encoding], [callback])
-
 
         out =new Uint8Array();
     }
@@ -73,20 +60,5 @@ while(frameCounter<100){
 
     // Close the client socket completely
     //if(frameCounter===100) client.destroy();
-    c++;
+    i++;
 }
-
-/*
-process.stdin.resume();
-
-var lingeringLine = "";
-
-process.stdin.on('data', function(chunk) {
-    console.log(chunk);
-});
-
-process.stdin.on('end', function() {
-    console.log(chunk);
-    console.log("end");
-});
-*/

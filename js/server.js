@@ -31,6 +31,12 @@ const SERVO_DEAD_BAND=90;
 let SERVO_VEL = new Float64Array(2);
 let SERVO_PWM=[0,0];
 
+//image data
+let imgbuffer=new Uint8Array(12000);
+let br=0;
+let newFrame=false;
+let frameCounter=0;
+
 //const { spawn } = require("child_process");
 const fs = require('fs'); //for pipes
 
@@ -44,6 +50,7 @@ if (isPi()){
 else console.log('Not RPI');
 
 var pipe;
+var pipeimg;
 if(pi){
     //init and stop servos
     console.log('Open pipe /dev/pigpio');
@@ -57,6 +64,10 @@ if(pi){
     fs.writeSync(fd,stop_left);
     fs.writeSync(fd,stop_right);
     console.log('Stopped.\n');
+
+    console.log('Open pipe /pipetest');
+    const fdi = fs.openSync('pipetest', 'r+');
+    pipeimg = fdi;
 }
 
 //start client
@@ -147,6 +158,20 @@ function newConnection(socket){
     socket.on('module', recvModule);
     function recvModule(module){
         console.log("Recibido module: " + module);
+    }
+
+    while(true){
+        fs.read(pipe,imgbuffer,0,11700,-1,function(err,bytesRead){
+            if(err) return console.log(err);
+            br=bytesRead;
+            newFrame=true;
+        });
+
+        if(newFrame && imgbuffer.length>0){
+            let img=imgbuffer.slice(0,br);
+            socket.emit("img_data",img);
+            newFrame=false;
+        }
     }
 
 }
