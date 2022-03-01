@@ -172,7 +172,7 @@ function newConnection(socket){
                 let img=imgbuffer.slice(0,br);
                 socket.emit("img_data",img);
                 newFrame=false;
-		console.log(img);
+		        console.log(img);
             }
         });
     //}

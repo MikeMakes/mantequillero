@@ -42,6 +42,8 @@ function setup() {
 function draw() {
 	background(255, 204, 0); //in future bkg will be webcam capture
 
+	let img = createImg("data:image/png;base64," + window.btoa(imgbuff),'image?');
+
 	//coordinate system
 	line(centerX,centerY,mouseX,mouseY);
 	line(0, mouseY, width, mouseY);
