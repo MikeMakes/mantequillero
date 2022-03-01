@@ -153,9 +153,9 @@ function newConnection(socket){
         console.log("sent img_data: ");
         console.log(imgbuffer);
         console.log("");
-	imgtest=[...imgbuffer];
-	console.log("imgtest: ");
-	console.log(imgtest);
+        imgtest=[...imgbuffer];
+        console.log("imgtest: ");
+        console.log(imgtest);
         socket.emit("img_data",imgtest);
     }
 

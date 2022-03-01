@@ -15,6 +15,16 @@ let pwm_data = [0,0];
 var socket;
 let imgbuff=new Uint8Array(12000);
 
+function _arrayBufferToBase64( buffer ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+}
+
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	frameRate(24);
@@ -50,9 +60,12 @@ function draw() {
 	background(255, 204, 0); //in future bkg will be webcam capture
 
 	if(imgbuff.length>0){
-		var decoder=new TextDecoder('utf8');
-		var b64 = btoa(decoder.decode(imgbuff));
+		//var decoder=new TextDecoder('utf8');
+		//var b64 = btoa(decoder.decode(imgbuff));
+
 		//var b64 = imgbuff.toString('base64');
+
+		var b64 = _arrayBufferToBase64(imgbuff);
 		let img = createImg("data:image/jpeg;base64," + b64,'image?');
 	}
 
