@@ -8,20 +8,23 @@ console.log('Open pipe /pipetest');
 const fd = fs.openSync('pipetest', 'r+');
 pipe = fd;
 
-let data=new Uint8Array();
+let data=new Uint8Array(640*480);
 let out=new Uint8Array();
-let framecounter=0;
+let frameCounter=0;
 let c=0;
+let br=0;
 
-while(framecounter<100){
+while(frameCounter<100){
 
     console.log("reading pipe");
     //fs.readSync(pipe,data);
-    fs.read(pipe,data,0,10,-1,function(err,bytesRead,buffer){
-        console.log("buffer");
-        data=buffer;
+    fs.read(pipe,data,0,11700,-1,function(err,bytesRead){
+    //    console.log("buffer");
+    //    data=buffer;
+	br=bytesRead;
+	console.log("bytesRead: "+br);
     });
-
+    console.log(data);
 
     console.log("searching start of jpeg");
     //Slice by knowing all jpeg start with 0xFF 0xD8 bytes
@@ -37,6 +40,18 @@ while(framecounter<100){
     console.log("");
     console.log(data);
     console.log("");
+
+    if(data.length>0){
+    console.log("br: "+br);
+    let d=data.slice(0,11700);
+    console.log(d);
+    fs.writeFile("d.jpeg",d,'utf-8',function(err){
+	if(err) console.log(err);
+	else console.log("writed d.jpeg");
+    });
+
+    frameCounter=111;
+    }
 
     //Save frame
     if((jpegstart>=0)&&out.length>0){
