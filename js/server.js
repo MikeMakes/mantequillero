@@ -151,11 +151,7 @@ function newConnection(socket){
         socket.emit("pwm_data",SERVO_PWM);
         
         console.log("sent img_data: ");
-        console.log(imgbuffer);
-        console.log("");
         imgtest=[...imgbuffer];
-        console.log("imgtest: ");
-        console.log(imgtest);
         socket.emit("img_data",imgtest);
     }
 

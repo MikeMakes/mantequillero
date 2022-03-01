@@ -14,6 +14,7 @@ let pwm_data = [0,0];
 
 var socket;
 let imgbuff=new Uint8Array(12000);
+let img;
 
 function _arrayBufferToBase64( buffer ) {
     var binary = '';
@@ -44,15 +45,6 @@ function setup() {
 
 	socket.on("img_data", (imgbuffer) => {
 		imgbuff=imgbuffer;
-		console.log("imgbuffer: ");
-		console.log(imgbuffer);
-		console.log(imgbuffer.length);
-		console.log("imgbuff: ");
-		console.log(imgbuff);
-		console.log(imgbuff.length);
-		console.log(imgbuff[0]);
-		console.log(imgbuff[1]);
-		console.log("");
 	});
 }
 
@@ -60,14 +52,10 @@ function draw() {
 	background(255, 204, 0); //in future bkg will be webcam capture
 
 	if(imgbuff.length>0){
-		//var decoder=new TextDecoder('utf8');
-		//var b64 = btoa(decoder.decode(imgbuff));
-
-		//var b64 = imgbuff.toString('base64');
-
 		var b64 = _arrayBufferToBase64(imgbuff);
-		let img = createImg("data:image/jpeg;base64," + b64,'image?');
+		img = createImg("data:image/jpeg;base64," + b64,'jpeg image captured');
 	}
+	img.position(centerX,centerY);
 
 	//coordinate system
 	line(centerX,centerY,mouseX,mouseY);
