@@ -36,7 +36,7 @@ let imgbuffer=new Uint8Array(12000);
 let br=0;
 let newFrame=false;
 let frameCounter=0;
-let imgtest=new Uint8Array(12000);
+let img=new Uint8Array(12000);
 
 //const { spawn } = require("child_process");
 const fs = require('fs'); //for pipes
@@ -150,9 +150,9 @@ function newConnection(socket){
         SERVO_PWM=[...apply_pwm(SERVO_VEL)];
         socket.emit("pwm_data",SERVO_PWM);
         
-        console.log("sent img_data: ");
-        imgtest=[...imgbuffer];
-        socket.emit("img_data",imgtest);
+        //console.log("sent img_data: ");
+        //imgtest=[...imgbuffer];
+        //socket.emit("img_data",imgtest);
     }
 
     socket.on('angle', recvAngle);
@@ -167,13 +167,16 @@ function newConnection(socket){
 
     
     function updateFrame(){
-        console.log("New frame");
+        console.log("updateFrame");
         fs.read(pipeimg,imgbuffer,0,12000,-1,function(err,bytesRead){
+            console.log("READ");
             if(err) return console.log(err);
             br=bytesRead;
             newFrame=true;
             if(newFrame && imgbuffer.length>0){
-                let img=imgbuffer.slice(0,br);
+                console.log("newFrame");
+                //let img=imgbuffer.slice(0,br);
+                img=[...imgbuffer];
                 socket.emit("img_data",img);
                 newFrame=false;
             }
