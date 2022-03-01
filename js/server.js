@@ -177,6 +177,7 @@ function newConnection(socket){
                 console.log("newFrame");
                 //let img=imgbuffer.slice(0,br);
                 img=[...imgbuffer];
+                console.log("img");
                 socket.emit("img_data",img);
                 newFrame=false;
             }
