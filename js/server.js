@@ -65,8 +65,8 @@ if(pi){
     fs.writeSync(fd,stop_right);
     console.log('Stopped.\n');
 
-    console.log('Open pipe /pipetest');
-    const fdi = fs.openSync('pipetest', 'r+');
+    console.log('Open pipe /imgpipe');
+    const fdi = fs.openSync('imgpipe', 'r+');
     pipeimg = fdi;
 }
 
