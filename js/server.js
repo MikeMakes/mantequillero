@@ -38,6 +38,23 @@ let newFrame=false;
 let frameCounter=0;
 let imgtest=new Uint8Array(12000);
 
+function updateFrame(){
+    fs.read(pipeimg,imgbuffer,0,12000,-1,function(err,bytesRead){
+        if(err) return console.log(err);
+        br=bytesRead;
+        newFrame=true;
+        if(newFrame && imgbuffer.length>0){
+            let img=imgbuffer.slice(0,br);
+            socket.emit("img_data",img);
+            newFrame=false;
+        }
+    });
+
+    setImmediate(() => {
+        updateFrame();
+    });
+}
+
 //const { spawn } = require("child_process");
 const fs = require('fs'); //for pipes
 
@@ -165,17 +182,8 @@ function newConnection(socket){
         console.log("Recibido module: " + module);
     }
 
-    while(true){
-        fs.read(pipeimg,imgbuffer,0,12000,-1,function(err,bytesRead){
-            if(err) return console.log(err);
-            br=bytesRead;
-            newFrame=true;
-            if(newFrame && imgbuffer.length>0){
-                let img=imgbuffer.slice(0,br);
-                socket.emit("img_data",img);
-                newFrame=false;
-            }
-        });
-    }
-
+    setImmediate(() => {
+        updateFrame();        
+    });
+    
 }
