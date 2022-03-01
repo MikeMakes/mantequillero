@@ -13,6 +13,7 @@ let vel_data = new Array(2);
 let pwm_data = [0,0];
 
 var socket;
+let imgbuff=new Uint8Array(12000);
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
@@ -32,7 +33,9 @@ function setup() {
 	//}
 
 	socket.on("img_data", (imgbuffer) => {
-		console.log("imgbuffer: " + imgbuffer);
+		imgbuff=imgbuffer;
+		console.log("recv image");
+		console.log("imgbuffer: " + imgbuff);
 	});
 }
 
