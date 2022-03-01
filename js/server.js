@@ -143,12 +143,15 @@ function newConnection(socket){
                 console.log("\tRIGHT: "+pwm_right);
             }
 
-	    return pwm_values;
+	        return pwm_values;
         }
     
-	SERVO_PWM=[...apply_pwm(SERVO_VEL)];
-	socket.emit("pwm_data",SERVO_PWM);
-	console.log("sent img_data");
+        SERVO_PWM=[...apply_pwm(SERVO_VEL)];
+        socket.emit("pwm_data",SERVO_PWM);
+        
+        console.log("sent img_data: ");
+        console.log(imgbuffer);
+        console.log("");
         socket.emit("img_data",imgbuffer);
     }
 
@@ -167,12 +170,10 @@ function newConnection(socket){
             if(err) return console.log(err);
             br=bytesRead;
             newFrame=true;
-       	    console.log(newFrame); 
             if(newFrame && imgbuffer.length>0){
                 let img=imgbuffer.slice(0,br);
                 socket.emit("img_data",img);
                 newFrame=false;
-		        console.log(img);
             }
         });
     //}

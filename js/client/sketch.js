@@ -34,8 +34,9 @@ function setup() {
 
 	socket.on("img_data", (imgbuffer) => {
 		imgbuff=imgbuffer;
-		console.log("recv image");
-		console.log("imgbuffer: " + imgbuff);
+		console.log("imgbuffer: ");
+		console.log(imgbuff);
+		console.log("");
 	});
 }
 
@@ -43,8 +44,9 @@ function draw() {
 	background(255, 204, 0); //in future bkg will be webcam capture
 
 
-	var decoder=new TextDecoder('utf8');
-	var b64 = btoa(decoder.decode(imgbuff));
+	//var decoder=new TextDecoder('utf8');
+	//var b64 = btoa(decoder.decode(imgbuff));
+	var b64 = imgbuff.toString('base64');
 	let img = createImg("data:image/jpeg;base64," + b64,'image?');
 
 	//coordinate system
