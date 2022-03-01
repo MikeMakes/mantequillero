@@ -36,6 +36,7 @@ let imgbuffer=new Uint8Array(12000);
 let br=0;
 let newFrame=false;
 let frameCounter=0;
+let imgtest=new Uint8Array(12000);
 
 //const { spawn } = require("child_process");
 const fs = require('fs'); //for pipes
@@ -152,7 +153,10 @@ function newConnection(socket){
         console.log("sent img_data: ");
         console.log(imgbuffer);
         console.log("");
-        socket.emit("img_data",imgbuffer);
+	imgtest=[...imgbuffer];
+	console.log("imgtest: ");
+	console.log(imgtest);
+        socket.emit("img_data",imgtest);
     }
 
     socket.on('angle', recvAngle);

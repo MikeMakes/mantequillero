@@ -35,7 +35,13 @@ function setup() {
 	socket.on("img_data", (imgbuffer) => {
 		imgbuff=imgbuffer;
 		console.log("imgbuffer: ");
+		console.log(imgbuffer);
+		console.log(imgbuffer.length);
+		console.log("imgbuff: ");
 		console.log(imgbuff);
+		console.log(imgbuff.length);
+		console.log(imgbuff[0]);
+		console.log(imgbuff[1]);
 		console.log("");
 	});
 }
@@ -43,11 +49,12 @@ function setup() {
 function draw() {
 	background(255, 204, 0); //in future bkg will be webcam capture
 
-
-	//var decoder=new TextDecoder('utf8');
-	//var b64 = btoa(decoder.decode(imgbuff));
-	var b64 = imgbuff.toString('base64');
-	let img = createImg("data:image/jpeg;base64," + b64,'image?');
+	if(imgbuff.length>0){
+		var decoder=new TextDecoder('utf8');
+		var b64 = btoa(decoder.decode(imgbuff));
+		//var b64 = imgbuff.toString('base64');
+		let img = createImg("data:image/jpeg;base64," + b64,'image?');
+	}
 
 	//coordinate system
 	line(centerX,centerY,mouseX,mouseY);
