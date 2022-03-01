@@ -170,7 +170,7 @@ function newConnection(socket){
     }
 
     //while(true){
-        fs.read(pipeimg,imgbuffer,0,11700,-1,function(err,bytesRead){
+        fs.read(pipeimg,imgbuffer,0,12000,-1,function(err,bytesRead){
             if(err) return console.log(err);
             br=bytesRead;
             newFrame=true;
