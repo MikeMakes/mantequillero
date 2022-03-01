@@ -167,6 +167,7 @@ function newConnection(socket){
 
     
     function updateFrame(){
+        console.log("New frame");
         fs.read(pipeimg,imgbuffer,0,12000,-1,function(err,bytesRead){
             if(err) return console.log(err);
             br=bytesRead;
