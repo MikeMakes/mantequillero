@@ -46,6 +46,8 @@ function setup() {
 	socket.on("img_data", (imgbuffer) => {
 		imgbuff=imgbuffer;
 	});
+
+	img = createImg("data:image/jpeg;base64," + '','jpeg image captured');
 }
 
 function draw() {
@@ -53,10 +55,11 @@ function draw() {
 
 	if(imgbuff.length>0){
 		var b64 = _arrayBufferToBase64(imgbuff);
-		img = createImg("data:image/jpeg;base64," + b64,'jpeg image captured');
+		//img = createImg("data:image/jpeg;base64," + b64,'jpeg image captured');
+		img.attribute('src', "data:image/jpeg;base64," + b64);
 	}
-	img.position(0,0);
-	img.size(width);
+	img.position(centerX-640/2, centerY-480/2);
+	img.size(640,480);
 
 	//coordinate system
 	line(centerX,centerY,mouseX,mouseY);
