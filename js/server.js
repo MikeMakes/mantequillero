@@ -165,7 +165,7 @@ function newConnection(socket){
         console.log("Recibido module: " + module);
     }
 
-    //while(true){
+    while(true){
         fs.read(pipeimg,imgbuffer,0,12000,-1,function(err,bytesRead){
             if(err) return console.log(err);
             br=bytesRead;
@@ -176,6 +176,6 @@ function newConnection(socket){
                 newFrame=false;
             }
         });
-    //}
+    }
 
 }

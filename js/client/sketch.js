@@ -57,7 +57,6 @@ function draw() {
 
 	if(newFrame && imgbuff.length>0){
 		var b64 = _arrayBufferToBase64(imgbuff);
-		//img = createImg("data:image/jpeg;base64," + b64,'jpeg image captured');
 		img.attribute('src', "data:image/jpeg;base64," + b64);
 		newFrame=false;
 	}
