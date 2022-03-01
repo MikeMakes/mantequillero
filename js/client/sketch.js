@@ -55,7 +55,8 @@ function draw() {
 		var b64 = _arrayBufferToBase64(imgbuff);
 		img = createImg("data:image/jpeg;base64," + b64,'jpeg image captured');
 	}
-	img.position(centerX,centerY);
+	img.position(0,0);
+	img.size(width);
 
 	//coordinate system
 	line(centerX,centerY,mouseX,mouseY);
