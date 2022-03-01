@@ -160,18 +160,18 @@ function newConnection(socket){
         console.log("Recibido module: " + module);
     }
 
-    while(true){
+    //while(true){
         fs.read(pipeimg,imgbuffer,0,11700,-1,function(err,bytesRead){
             if(err) return console.log(err);
             br=bytesRead;
             newFrame=true;
+        
+            if(newFrame && imgbuffer.length>0){
+                let img=imgbuffer.slice(0,br);
+                socket.emit("img_data",img);
+                newFrame=false;
+            }
         });
-
-        if(newFrame && imgbuffer.length>0){
-            let img=imgbuffer.slice(0,br);
-            socket.emit("img_data",img);
-            newFrame=false;
-        }
-    }
+    //}
 
 }
