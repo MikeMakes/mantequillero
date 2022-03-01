@@ -38,23 +38,6 @@ let newFrame=false;
 let frameCounter=0;
 let imgtest=new Uint8Array(12000);
 
-function updateFrame(){
-    fs.read(pipeimg,imgbuffer,0,12000,-1,function(err,bytesRead){
-        if(err) return console.log(err);
-        br=bytesRead;
-        newFrame=true;
-        if(newFrame && imgbuffer.length>0){
-            let img=imgbuffer.slice(0,br);
-            socket.emit("img_data",img);
-            newFrame=false;
-        }
-    });
-
-    setImmediate(() => {
-        updateFrame();
-    });
-}
-
 //const { spawn } = require("child_process");
 const fs = require('fs'); //for pipes
 
@@ -100,6 +83,25 @@ console.log("Server running:\n");
 //var socket=require('socket.io');
 var socket=require('socket.io', { rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] });
 var io=socket(serverp5);
+
+
+function updateFrame(){
+    fs.read(pipeimg,imgbuffer,0,12000,-1,function(err,bytesRead){
+        if(err) return console.log(err);
+        br=bytesRead;
+        newFrame=true;
+        if(newFrame && imgbuffer.length>0){
+            let img=imgbuffer.slice(0,br);
+            socket.emit("img_data",img);
+            newFrame=false;
+        }
+    });
+
+    setImmediate(() => {
+        updateFrame();
+    });
+}
+
 
 io.sockets.on('connection', newConnection);
 function newConnection(socket){
