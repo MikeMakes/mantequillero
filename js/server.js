@@ -185,14 +185,16 @@ function newConnection(socket){
             newFrame=true;
         } else if(jpegstart>0){
             let chunksliced = new Uint8Array(chunk.slice(0,jpegstart));
-	    console.log("img");
-	    console.log(img);
-	    console.log(img.length);
-            img=Buffer.concat([img, chunksliced]);
+            console.log("img");
+            console.log(img);
+            console.log(img.length);
+            //img=Buffer.concat([img, chunksliced]);
+            img=[...img, ...chunksliced];
             nextimg=[...chunk.slice(jpegstart)];
             newFrame=true;
         } else{
-            img=[...Buffer.concat([img, chunk])];
+            ///img=[...Buffer.concat([img, chunk])];
+            img=[...img, ...chunk];
             newFrame=false;
         }
 
