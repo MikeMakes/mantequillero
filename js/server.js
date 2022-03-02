@@ -184,7 +184,8 @@ function newConnection(socket){
             img=[...chunk];
             newFrame=true;
         } else if(jpegstart>0){
-            img=[...Buffer.concat(img, chunk.slice(0,jpegstart))];
+            let chunksliced = new Uint8Array(chunk.slice(0,jpegstart));
+            img=[...Buffer.concat(img, chunksliced)];
             nextimg=[...chunk.slice(jpegstart)];
             newFrame=true;
         } else{
