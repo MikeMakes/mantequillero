@@ -37,6 +37,7 @@ let br=0;
 let newFrame=false;
 let frameCounter=0;
 let img=new Uint8Array(12000);
+let nextimg=new Uint8Array();
 
 //const { spawn } = require("child_process");
 const fs = require('fs'); //for pipes
@@ -165,12 +166,40 @@ function newConnection(socket){
         console.log("Recibido module: " + module);
     }
 
-    const imgstream = fs.createReadStream(pipeimg);
+    const imgstream = fs.createReadStream("imgpipe");
     imgstream.on('data', (chunk) => {
         console.log(`Received ${chunk.length} bytes of data.`);
         console.log(chunk);
+
+        let jpegstart = chunk.findIndex((element,index,array) => { 
+            //if(element===0xFF) console.log("0xFF at index:  " + index);
+            //if(array[index+1]===0xD8) console.log("0xD8 at index:  " + index+1);
+            if((element===0xFF)&&(array[index+1]===0xD8)){
+              //console.log("Start of frame at: " + index);
+              return true;
+            }  
+        });
+
+        if(jpegstart===0){
+            img=[...chunk];
+            newFrame=true;
+        } else if(jpegstart>0){
+            img=[...Buffer.concat(img, chunk.slice(0,jpegstart))];
+            nextimg=[...chunk.slice(jpegstart)];
+            newFrame=true;
+        } else{
+            img=[...Buffer.concat(img, chunk)];
+            newFrame=false;
+        }
+
+        if(newFrame && img.length>0){
+            socket.emit("img_data",img);
+            img = new Uint8Array();
+            newFrame = false;
+            if(nextimg.length>0) img=[...nextimg];
+        }
     });
-    
+
     /*
     function updateFrame(){
         console.log("updateFrame");
