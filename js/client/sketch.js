@@ -81,17 +81,21 @@ function draw() {
 	line(0,centerY,width,centerY);
 
 	//circle
-	fill(255,255,255,100);
+	fill(255,255,255,0);
+	stroke(255,0,0);
 	ellipse(centerX, centerY, windowHeight-100, windowHeight-100);
+	stroke(255, 204, 0);
 	ellipse(centerX, centerY, windowHeight-300, windowHeight-300);
+	stroke(0,255,0);	
 	ellipse(centerX, centerY, windowHeight-800, windowHeight-800);
+	stroke(0,0,0);
 	mx=centerX-mouseX;
 	my=centerY-mouseY;
 
 	let reduce_lin = true;
 	let reduce_ang = true;
 
-	//get velocity mouse input
+	//get velocity mouse input //todo: better mouse input
 	if(mouseIsPressed){
 		modd=sqrt(pow(mx,2)+pow(my,2));
 		if(my<0) modd=-modd;
