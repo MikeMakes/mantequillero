@@ -32,11 +32,11 @@ let SERVO_VEL = new Float64Array(2);
 let SERVO_PWM=[0,0];
 
 //image data
-let imgbuffer=new Uint8Array(12000);
-let br=0;
+//let imgbuffer=new Uint8Array(12000);
+//let br=0;
 let newFrame=false;
-let frameCounter=0;
-let img=new Uint8Array(12000);
+//let frameCounter=0;
+let img=new Uint8Array();
 let nextimg=new Uint8Array();
 
 //const { spawn } = require("child_process");

@@ -13,7 +13,7 @@ let vel_data = new Array(2);
 let pwm_data = [0,0];
 
 var socket;
-let imgbuff=new Uint8Array(12000);
+let imgbuff=new Uint8Array();
 let img;
 let newFrame=false;
 
