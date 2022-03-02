@@ -54,7 +54,9 @@ function setup() {
 }
 
 function draw() {
-	background(255, 204, 0); //in future bkg will be webcam capture
+	clear();
+	//background(100, 100, 100, 0); //in future bkg will be webcam capture
+	background(255,255,255,0);
 
 	if(newFrame && imgbuff.length>0){
 		var b64 = _arrayBufferToBase64(imgbuff);
