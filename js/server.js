@@ -169,7 +169,7 @@ function newConnection(socket){
     const imgstream = fs.createReadStream("imgpipe");
     imgstream.on('data', (chunk) => {
         console.log(`Received ${chunk.length} bytes of data.`);
-        console.log(chunk);
+        //console.log(chunk);
 
         let jpegstart = chunk.findIndex((element,index,array) => { 
             //if(element===0xFF) console.log("0xFF at index:  " + index);
@@ -185,11 +185,14 @@ function newConnection(socket){
             newFrame=true;
         } else if(jpegstart>0){
             let chunksliced = new Uint8Array(chunk.slice(0,jpegstart));
-            img=[...Buffer.concat(img, chunksliced)];
+	    console.log("img");
+	    console.log(img);
+	    console.log(img.length);
+            img=Buffer.concat([img, chunksliced]);
             nextimg=[...chunk.slice(jpegstart)];
             newFrame=true;
         } else{
-            img=[...Buffer.concat(img, chunk)];
+            img=[...Buffer.concat([img, chunk])];
             newFrame=false;
         }
 
