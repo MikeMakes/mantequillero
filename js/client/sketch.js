@@ -45,6 +45,7 @@ function setup() {
 	});
 
 	img = createImg("data:image/jpeg;base64," + '','jpeg image captured');
+	img.style("z-index","-1");
 
 	createCanvas(windowWidth, windowHeight);
 	frameRate(24);
