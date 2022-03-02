@@ -68,7 +68,7 @@ if(pi){
     console.log('Stopped.\n');
 
     console.log('Open pipe /imgpipe');
-    const fdi = fs.openSync('imgpipe', 'r+');
+    const fdi = fs.openSync('imgpipe', 'r+');   //todo: use not sync open
     pipeimg = fdi;
 }
 
@@ -166,7 +166,7 @@ function newConnection(socket){
         console.log("Recibido module: " + module);
     }
 
-    const imgstream = fs.createReadStream("imgpipe");
+    const imgstream = fs.createReadStream("imgpipe"); //todo: pass imgpipe file descript instead of path
     imgstream.on('data', (chunk) => {
         console.log(`Received ${chunk.length} bytes of data.`);
         //console.log(chunk);
