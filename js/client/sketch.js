@@ -28,11 +28,6 @@ function _arrayBufferToBase64( buffer ) {
 }
 
 function setup() {
-	createCanvas(windowWidth, windowHeight);
-	frameRate(24);
-	centerX=windowWidth/2;
-	centerY=windowHeight/2;
-
 	socket = io.connect(window.location.origin);
 	//socket = io.connect(window.location.origin,{ rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling']});
 
@@ -50,6 +45,11 @@ function setup() {
 	});
 
 	img = createImg("data:image/jpeg;base64," + '','jpeg image captured');
+
+	createCanvas(windowWidth, windowHeight);
+	frameRate(24);
+	centerX=windowWidth/2;
+	centerY=windowHeight/2;
 }
 
 function draw() {
