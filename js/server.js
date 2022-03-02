@@ -165,7 +165,13 @@ function newConnection(socket){
         console.log("Recibido module: " + module);
     }
 
+    const imgstream = fs.createReadStream(pipeimg);
+    imgstream.on('data', (chunk) => {
+        console.log(`Received ${chunk.length} bytes of data.`);
+        console.log(chunk);
+    });
     
+    /*
     function updateFrame(){
         console.log("updateFrame");
         fs.read(pipeimg,imgbuffer,0,12000,-1,function(err,bytesRead){
@@ -190,4 +196,5 @@ function newConnection(socket){
     setImmediate(() => {
         updateFrame();        
     });
+    */
 }
