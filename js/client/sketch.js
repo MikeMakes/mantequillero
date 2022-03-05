@@ -81,7 +81,7 @@ function draw() {
 	line(0,centerY,width,centerY);
 
 	//circle
-	fill(255,255,255,0);
+	noFill();//fill(255,255,255,0);
 	stroke(255,0,0);
 	ellipse(centerX, centerY, windowHeight-100, windowHeight-100);
 	stroke(255, 204, 0);
