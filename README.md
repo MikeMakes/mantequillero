@@ -10,7 +10,7 @@ The client looks like  [this](https://mikemakes.github.io/mantequillero/)
 - Install [pigpio](https://github.com/joan2937/pigpio) (read how to start his daemon)
 - Install [node.js](https://hassancorrigan.com/blog/install-nodejs-on-a-raspberry-pi-zero/)
 
-- sudo npm install socket.io p5-manager
+- sudo npm install socket.io p5-manager detect-rpi
 
 - sudo apt-get update
 - sudo apt-get install git
