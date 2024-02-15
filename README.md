@@ -15,6 +15,7 @@ The client looks like  [this](https://mikemakes.github.io/mantequillero/)
 - sudo apt-get update
 - sudo apt-get install git
 - git clone https://github.com/MikeMakes/mantequillero
+- mkfifo ./mantequillero/imgpipe [TBD]
 
 # Run web server with
 - node ./mantequillero/js/server.js
