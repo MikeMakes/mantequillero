@@ -1,7 +1,7 @@
 # mantequillero   
 It tosses you the butter.   
 Work in progress of the Rick & Morty butter robot with a Pi zero with some servos, webcam, and a node.js server controlled from a javascript client.  
-The client looks like  [this](https://mikemakes.github.io/mantequillero/)
+The client looks like  [this](https://mikemakes.github.io/mantequillero/) (the yellow background is replaced by video stream when available)
 
 ![Alt Text](https://github.com/MikeMakes/mantequillero/blob/page/demo_cat.gif)
 
